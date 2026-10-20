@@ -1,0 +1,2190 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>進金生能源服務 (6692) ｜ FY2027 董總年度商業計畫報告與決策戰情室</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Vue 3 CDN -->
+  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+  <!-- Apache ECharts CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Supabase JS SDK v2 -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+TC:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Noto Sans TC', 'Inter', sans-serif;
+      background-color: #07111E;
+      color: #F8FAFC;
+    }
+    .font-num {
+      font-family: 'Inter', 'Noto Sans TC', monospace;
+      font-variant-numeric: tabular-nums;
+    }
+    .glass-panel {
+      background: rgba(15, 29, 48, 0.82);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(148, 163, 184, 0.16);
+    }
+    .mckinsey-card {
+      background: linear-gradient(145deg, rgba(16, 33, 56, 0.92), rgba(10, 21, 38, 0.96));
+      border: 1px solid rgba(56, 189, 248, 0.18);
+      box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+    }
+    .action-title-bar {
+      border-left: 4px solid #38BDF8;
+      padding-left: 1rem;
+    }
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #07111E;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #1E3A5F;
+      border-radius: 3px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #38BDF8;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col selection:bg-sky-500 selection:text-white">
+  <div id="app" class="flex-1 flex flex-col">
+    <!-- Top Executive Navigation Bar -->
+    <header class="sticky top-0 z-40 glass-panel border-b border-slate-800/80 px-4 lg:px-8 py-3">
+      <div class="max-w-[1600px] mx-auto flex flex-wrap items-center justify-between gap-3">
+        <!-- Brand & Title -->
+        <div class="flex items-center space-x-3">
+          <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-sky-500 to-blue-700 flex items-center justify-center shadow-lg shadow-sky-900/40 font-black text-lg tracking-wider">
+            6692
+          </div>
+          <div>
+            <div class="flex items-center space-x-2">
+              <span class="text-xs font-bold uppercase tracking-widest text-sky-400">ACMEPOINT ENERGY SERVICES</span>
+              <span class="px-2 py-0.5 text-[11px] font-semibold rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30">FY2027 第二版正式報告</span>
+            </div>
+            <h1 class="text-base lg:text-lg font-extrabold text-white tracking-tight">
+              進金生能源服務 ｜ FY2027 董總年度商業計畫報告與策略決策平台
+            </h1>
+          </div>
+        </div>
+
+        <!-- Mode Switcher Tabs -->
+        <nav class="flex items-center bg-slate-900/90 p-1 rounded-xl border border-slate-700/70">
+          <button @click="switchMode('deck')" :class="activeMode==='deck' ? 'bg-sky-600 text-white shadow-md' : 'text-slate-400 hover:text-white'" class="px-3.5 py-1.5 rounded-lg text-xs font-bold transition flex items-center space-x-1.5">
+            <span>📊 15分鐘董總簡報 (10頁)</span>
+          </button>
+          <button @click="switchMode('charts')" :class="activeMode==='charts' ? 'bg-sky-600 text-white shadow-md' : 'text-slate-400 hover:text-white'" class="px-3.5 py-1.5 rounded-lg text-xs font-bold transition flex items-center space-x-1.5">
+            <span>📈 互動式數據圖表中心</span>
+          </button>
+          <button @click="switchMode('simulator')" :class="activeMode==='simulator' ? 'bg-emerald-600 text-white shadow-md' : 'text-slate-400 hover:text-white'" class="px-3.5 py-1.5 rounded-lg text-xs font-bold transition flex items-center space-x-1.5">
+            <span>🎯 10億達標策略模擬器</span>
+          </button>
+          <button @click="switchMode('appendix')" :class="activeMode==='appendix' ? 'bg-sky-600 text-white shadow-md' : 'text-slate-400 hover:text-white'" class="px-3.5 py-1.5 rounded-lg text-xs font-bold transition flex items-center space-x-1.5">
+            <span>📑 Excel 全量數據附錄 (211筆)</span>
+          </button>
+        </nav>
+
+        <!-- Right Controls: Timer & Supabase Status -->
+        <div class="flex items-center space-x-2.5">
+          <!-- 15-Minute Pacing Timer -->
+          <div class="flex items-center space-x-2 bg-slate-900/90 border border-slate-700/80 px-3 py-1.5 rounded-xl">
+            <span class="text-[11px] text-slate-400">簡報倒數</span>
+            <span class="font-num font-bold text-sm" :class="timerSeconds < 180 ? 'text-rose-400 animate-pulse' : 'text-emerald-400'">
+              {{ formattedTimer }}
+            </span>
+            <button @click="toggleTimer" class="text-xs px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-600">
+              {{ timerRunning ? '暫停' : '啟動' }}
+            </button>
+            <button @click="resetTimer" class="text-[11px] text-slate-400 hover:text-white" title="重置 15 分鐘">↺</button>
+          </div>
+
+          <!-- Speaker Script Toggle -->
+          <button @click="showScriptDrawer = !showScriptDrawer" :class="showScriptDrawer ? 'bg-amber-500/20 border-amber-400 text-amber-300' : 'bg-slate-900/90 border-slate-700 text-slate-300'" class="px-3 py-1.5 rounded-xl border text-xs font-bold transition">
+            🎙️ 講稿提詞機
+          </button>
+
+          <!-- Supabase Cloud Status Button -->
+          <button @click="showSupabaseModal = true" class="flex items-center space-x-2 px-3 py-1.5 rounded-xl border text-xs font-bold transition bg-slate-900/90 border-slate-700 hover:border-sky-500">
+            <span class="w-2.5 h-2.5 rounded-full" :class="sbConnected ? 'bg-emerald-400 shadow-sm shadow-emerald-400' : 'bg-amber-400'"></span>
+            <span>{{ sbConnected ? 'Supabase 已連線' : 'Supabase 設定' }}</span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- =================================================================== -->
+    <!-- MODE 1: 15-MINUTE EXECUTIVE BRIEFING DECK (10 SLIDES)               -->
+    <!-- =================================================================== -->
+    <main v-if="activeMode === 'deck'" class="flex-1 max-w-[1600px] w-full mx-auto px-4 lg:px-8 py-5 flex flex-col justify-between">
+      <!-- Slide Progress & Pacing Bar -->
+      <div class="flex flex-wrap items-center justify-between gap-2 mb-4 bg-slate-900/70 border border-slate-800 px-4 py-2.5 rounded-xl">
+        <div class="flex items-center space-x-2 overflow-x-auto py-0.5">
+          <button v-for="(s, idx) in slides" :key="idx" @click="currentSlide = idx"
+            :class="currentSlide === idx ? 'bg-sky-500 text-slate-950 font-black shadow-sm' : 'bg-slate-800/80 text-slate-400 hover:text-white'"
+            class="px-2.5 py-1 rounded-lg text-xs transition whitespace-nowrap">
+            P.{{ idx + 1 }} {{ s.shortTitle }}
+          </button>
+        </div>
+        <div class="flex items-center space-x-3 text-xs">
+          <span class="px-2.5 py-1 rounded-md bg-sky-950 text-sky-300 border border-sky-800/60 font-medium">
+            ⏱️ 本頁建議配速：{{ slides[currentSlide].timeAllocation }}
+          </span>
+          <span class="text-slate-400 font-num">Slide {{ currentSlide + 1 }} / {{ slides.length }}</span>
+        </div>
+      </div>
+
+      <!-- Slide Content Box -->
+      <div class="flex-1 mckinsey-card rounded-2xl p-6 lg:p-8 flex flex-col justify-between relative overflow-hidden">
+        <!-- Top Action Title (McKinsey Pyramid Style) -->
+        <div class="mb-6">
+          <div class="flex items-center justify-between mb-1.5">
+            <span class="text-xs font-bold tracking-widest uppercase text-sky-400">{{ slides[currentSlide].kicker }}</span>
+            <span class="text-xs text-slate-400">{{ slides[currentSlide].dataSource }}</span>
+          </div>
+          <div class="action-title-bar">
+            <h2 class="text-xl lg:text-2xl font-black text-white leading-snug">
+              {{ slides[currentSlide].actionTitle }}
+            </h2>
+            <p class="text-xs lg:text-sm text-slate-300 mt-1">
+              {{ slides[currentSlide].subTitle }}
+            </p>
+          </div>
+        </div>
+
+        <!-- SLIDE 1: 總體執行摘要 (Executive Summary) -->
+        <div v-if="currentSlide === 0" class="flex-1 flex flex-col justify-between space-y-6">
+          <!-- 4 Top KPI Cards -->
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div class="glass-panel p-4 rounded-xl border-l-4 border-l-sky-400">
+              <div class="text-xs text-slate-400">南區業務機會總額 (50案未乘勝率)</div>
+              <div class="text-2xl font-black font-num text-white mt-1">NT$ 36.66 億</div>
+              <div class="text-[11px] text-sky-300 mt-1">勝率加權簽約額：10.94 億元 (1,093,922,794)</div>
+            </div>
+            <div class="glass-panel p-4 rounded-xl border-l-4 border-l-emerald-400">
+              <div class="text-xs text-slate-400">南區 2027 預估認列營收 (對標 10 億)</div>
+              <div class="text-2xl font-black font-num text-emerald-400 mt-1">NT$ 6.55 億</div>
+              <div class="text-[11px] text-slate-300 mt-1">新案 5.86 億 ＋ 延續專案 0.69 億 (缺口 -3.45 億)</div>
+            </div>
+            <div class="glass-panel p-4 rounded-xl border-l-4 border-l-amber-400">
+              <div class="text-xs text-slate-400">全公司維運 (O&M) 2027 預算總額</div>
+              <div class="text-2xl font-black font-num text-amber-300 mt-1">NT$ 1.01 億</div>
+              <div class="text-[11px] text-slate-300 mt-1">毛利 2,337 萬 (毛利率 23.15%) ｜ 合約128筆+機會20筆</div>
+            </div>
+            <div class="glass-panel p-4 rounded-xl border-l-4 border-l-purple-400">
+              <div class="text-xs text-slate-400">跨年度遞延至 2028 完工儲備</div>
+              <div class="text-2xl font-black font-num text-purple-300 mt-1">NT$ 5.08 億</div>
+              <div class="text-[11px] text-slate-300 mt-1">台糖雙案 2027/10 開工，近 80% 營收跨年認列</div>
+            </div>
+          </div>
+
+          <!-- Comparison Table & Three Growth Engines -->
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+            <div class="lg:col-span-7 glass-panel rounded-xl p-5">
+              <h3 class="text-sm font-bold text-sky-300 mb-3">📌 FY2027 南區預算目標 vs. 工程進度預估檢視表</h3>
+              <div class="overflow-x-auto">
+                <table class="w-full text-left text-xs lg:text-sm">
+                  <thead>
+                    <tr class="border-b border-slate-700 text-slate-400">
+                      <th class="py-2.5">業務類別</th>
+                      <th class="py-2.5 text-right">原訂預算目標</th>
+                      <th class="py-2.5 text-right">勝率加權簽約額</th>
+                      <th class="py-2.5 text-right">2027 預估認列營收</th>
+                      <th class="py-2.5 text-right">目標達成率 / 缺口</th>
+                    </tr>
+                  </thead>
+                  <tbody class="divide-y divide-slate-800 font-num">
+                    <tr>
+                      <td class="py-3 font-sans font-bold text-white">① 統包工程 (EPC) <span class="text-xs text-slate-400 font-normal">(41案+6延續)</span></td>
+                      <td class="py-3 text-right">400,000,000</td>
+                      <td class="py-3 text-right text-sky-300">442,201,746</td>
+                      <td class="py-3 text-right font-bold text-emerald-400">463,039,422</td>
+                      <td class="py-3 text-right text-emerald-400 font-bold">+63,039,422 (115.8%)</td>
+                    </tr>
+                    <tr>
+                      <td class="py-3 font-sans font-bold text-white">② 資產管理 (建坤) <span class="text-xs text-slate-400 font-normal">(9案｜31.15MW)</span></td>
+                      <td class="py-3 text-right">600,000,000</td>
+                      <td class="py-3 text-right text-sky-300">651,721,048</td>
+                      <td class="py-3 text-right font-bold text-amber-400">192,160,685</td>
+                      <td class="py-3 text-right text-rose-400 font-bold">-407,839,315 (32.0%)</td>
+                    </tr>
+                    <tr class="bg-slate-800/50 font-bold">
+                      <td class="py-3 font-sans text-sky-300">南區業務合計 (50案+6延續)</td>
+                      <td class="py-3 text-right">1,000,000,000</td>
+                      <td class="py-3 text-right text-sky-300">1,093,922,794</td>
+                      <td class="py-3 text-right text-white">655,200,107</td>
+                      <td class="py-3 text-right text-rose-400">-344,799,893 (65.5%)</td>
+                    </tr>
+                    <tr class="border-t-2 border-slate-700 bg-emerald-950/20">
+                      <td class="py-3 font-sans font-bold text-emerald-300">➕ 維運事業預算 (O&M 148筆)</td>
+                      <td class="py-3 text-right text-slate-400">獨立編列</td>
+                      <td class="py-3 text-right text-slate-400">100,936,186</td>
+                      <td class="py-3 text-right font-bold text-emerald-300">100,936,186</td>
+                      <td class="py-3 text-right text-emerald-300">毛利 2,336.5 萬 (23.15%)</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <p class="text-[11px] text-slate-400 mt-3">
+                💡 <strong>關鍵洞察：</strong>第一版 (10/06) 以「加權簽約額」計算故顯示 9.45 億；第二版 (10/20) 嚴格依「施工～竣工月數比例」認列，資產管理簽約額雖達 <strong>6.52 億</strong>（超標），但因台糖雙案 2027/10 才開工，4.40 億遞延至 2028 年認列。
+              </p>
+            </div>
+
+            <!-- 3 Strategic Pillars -->
+            <div class="lg:col-span-5 flex flex-col justify-between space-y-3">
+              <div class="glass-panel p-4 rounded-xl border-l-4 border-l-emerald-500">
+                <div class="flex justify-between items-center">
+                  <span class="text-xs font-bold text-emerald-400">① 統包工程 (EPC) ｜ 現金流與高週轉引擎</span>
+                  <span class="text-xs font-num bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded">目標 4.0 億 → 預估 4.63 億</span>
+                </div>
+                <p class="text-xs text-slate-300 mt-1.5">聚焦大型自用屋頂（日煙 5MW、丸紅東南實業）、大學與防災微電網、錶後儲能，維持高資金週轉率並超額覆蓋目標 115.8%。</p>
+              </div>
+              <div class="glass-panel p-4 rounded-xl border-l-4 border-l-amber-500">
+                <div class="flex justify-between items-center">
+                  <span class="text-xs font-bold text-amber-400">② 資產管理 (建坤) ｜ 高毛利與結構轉型核心</span>
+                  <span class="text-xs font-num bg-amber-500/20 text-amber-300 px-2 py-0.5 rounded">目標 6.0 億 ｜ 簽約 6.52 億</span>
+                </div>
+                <p class="text-xs text-slate-300 mt-1.5">主攻台糖大型停車場 (25MW)、工業區屋頂租賃與老舊電廠收購整改。簽約能量已達標，決勝關鍵在於「工期前移」與「主設備進場節點認列」。</p>
+              </div>
+              <div class="glass-panel p-4 rounded-xl border-l-4 border-l-sky-500">
+                <div class="flex justify-between items-center">
+                  <span class="text-xs font-bold text-sky-400">③ 資料中心 (AIDC) ｜ FY2028 第二成長曲線</span>
+                  <span class="text-xs font-num bg-sky-500/20 text-sky-300 px-2 py-0.5 rounded">中長期加權目標 10.0 億</span>
+                </div>
+                <p class="text-xs text-slate-300 mt-1.5">定位為「AIDC 電力交付端統包」，鎖定麻豆 100MW、桃園 10MW、嘉惠 10MW 算力中心特高壓變電站與灰區不斷電備援工程。</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SLIDE 2: 機會漏斗至營收轉化診斷 -->
+        <div v-if="currentSlide === 1" class="flex-1 grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+          <div class="lg:col-span-7 glass-panel p-5 rounded-xl">
+            <h3 class="text-sm font-bold text-sky-300 mb-4">🌪️ FY2027 南區 36.66 億商機漏斗與跨年遞延結構拆解</h3>
+            <div class="space-y-4">
+              <!-- Funnel Step 1 -->
+              <div class="bg-slate-900/90 p-3.5 rounded-xl border border-slate-700">
+                <div class="flex justify-between text-xs font-bold mb-1">
+                  <span class="text-slate-200">STAGE 1 ｜ CRM 名目機會總額 (50 案未乘勝率)</span>
+                  <span class="font-num text-sky-400 text-sm">NT$ 3,665,885,239 (100%)</span>
+                </div>
+                <div class="w-full bg-slate-800 h-3 rounded-full overflow-hidden">
+                  <div class="bg-sky-500 h-full" style="width: 100%"></div>
+                </div>
+                <div class="text-[11px] text-slate-400 mt-1">統包工程 41 案 (20.80 億 / 54.3MW) ＋ 資產管理 9 案 (15.86 億 / 31.2MW)</div>
+              </div>
+
+              <!-- Funnel Step 2 -->
+              <div class="bg-slate-900/90 p-3.5 rounded-xl border border-slate-700">
+                <div class="flex justify-between text-xs font-bold mb-1">
+                  <span class="text-slate-200">STAGE 2 ｜ 乘勝率加權實質簽約金額 (50 案)</span>
+                  <span class="font-num text-indigo-400 text-sm">NT$ 1,093,922,794 (29.8%)</span>
+                </div>
+                <div class="w-full bg-slate-800 h-3 rounded-full overflow-hidden">
+                  <div class="bg-indigo-500 h-full" style="width: 29.8%"></div>
+                </div>
+                <div class="text-[11px] text-slate-400 mt-1">2026年底前簽約 24 案 (2.79 億) ＋ 2027年內簽約 26 案 (8.15 億) ｜ 加權簽約毛利 1.36 億</div>
+              </div>
+
+              <!-- Funnel Step 3 (Split) -->
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <div class="bg-rose-950/30 p-3.5 rounded-xl border border-rose-500/40">
+                  <div class="text-xs font-bold text-rose-300">⚠️ 跨年工期遞延至 2028 以後認列</div>
+                  <div class="text-xl font-black font-num text-rose-400 mt-1">NT$ 507,733,656</div>
+                  <p class="text-[11px] text-slate-300 mt-1">占加權簽約額 <strong>46.4%</strong>！主因台糖兩大停車場 (加權 5.5 億) 2027/10 才開工，4.40 億落入 2028 年。</p>
+                </div>
+                <div class="bg-emerald-950/30 p-3.5 rounded-xl border border-emerald-500/40">
+                  <div class="text-xs font-bold text-emerald-300">✅ 2027 新案當期認列 ＋ 延續專案挹注</div>
+                  <div class="text-xl font-black font-num text-emerald-400 mt-1">NT$ 655,200,107</div>
+                  <p class="text-[11px] text-slate-300 mt-1">2027 新案工進認列 <strong>5.86 億</strong> ＋ 已簽約延續專案 6 案貢獻 <strong>0.69 億</strong>。</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Carryover Breakdown Card -->
+          <div class="lg:col-span-5 glass-panel p-5 rounded-xl flex flex-col justify-between space-y-4">
+            <div>
+              <h3 class="text-sm font-bold text-amber-300 mb-2">🔍 延續專案未認列拆解 (13 案合約總額 4.34 億)</h3>
+              <p class="text-xs text-slate-300 mb-3">截至 2026/09/30 尚未認列餘額共 <strong>140,954,738 元</strong>，依工程進度拆解如下：</p>
+              <div class="space-y-2.5 text-xs">
+                <div class="p-3 rounded-lg bg-slate-900 border border-slate-700 flex justify-between items-center">
+                  <div>
+                    <div class="font-bold text-slate-200">2026 Q4 (10~12月) 預計工進消化</div>
+                    <div class="text-[11px] text-slate-400">笨港二變儲能、石龜國小微電網、賽孚思、東哥等 6 案</div>
+                  </div>
+                  <span class="font-num font-bold text-slate-300">58,258,387 元</span>
+                </div>
+                <div class="p-3 rounded-lg bg-emerald-950/40 border border-emerald-600/40 flex justify-between items-center">
+                  <div>
+                    <div class="font-bold text-emerald-300">2027 年度認列營收 (6 案)</div>
+                    <div class="text-[11px] text-slate-300">安德順(雲林/屏東)、奇景光電(車棚/幼稚園)、正聚、遠龍</div>
+                  </div>
+                  <span class="font-num font-bold text-emerald-400">69,021,931 元</span>
+                </div>
+                <div class="p-3 rounded-lg bg-amber-950/40 border border-amber-500/50 flex justify-between items-center">
+                  <div>
+                    <div class="font-bold text-amber-300">🚨 漏勾未納入推估 (JDE 缺起訖日)</div>
+                    <div class="text-[11px] text-amber-200">12103003 台南學甲魚塭五期 (普登大坪頂 297kWp)</div>
+                  </div>
+                  <span class="font-num font-bold text-amber-400">13,674,420 元</span>
+                </div>
+              </div>
+            </div>
+            <div class="p-3.5 rounded-xl bg-sky-950/50 border border-sky-500/40 text-xs text-sky-200">
+              💡 <strong>事業代表立即可執行動作：</strong>請工程與業務本週內於 JDE 補齊「12103003 普登大坪頂案」預計專案起訖日並勾選納入，即可無痛為 2027 立即找回 <strong>1,367.4 萬元</strong> 確定營收！
+            </div>
+          </div>
+        </div>
+
+        <!-- SLIDE 3: 勝率結構分析与中確定性攻堅 -->
+        <div v-if="currentSlide === 2" class="flex-1 grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+          <div class="lg:col-span-7 glass-panel p-5 rounded-xl flex flex-col justify-between">
+            <div>
+              <h3 class="text-sm font-bold text-sky-300 mb-3">📊 2027 預估營收依「勝率確定性區間」分佈</h3>
+              <table class="w-full text-left text-xs lg:text-sm">
+                <thead>
+                  <tr class="border-b border-slate-700 text-slate-400">
+                    <th class="py-2">確定性與勝率區間</th>
+                    <th class="py-2 text-right">統包工程 (案數/金額)</th>
+                    <th class="py-2 text-right">資產管理 (案數/金額)</th>
+                    <th class="py-2 text-right">2027 營收合計</th>
+                    <th class="py-2 text-right">占比</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-800 font-num">
+                  <tr>
+                    <td class="py-2.5 font-sans font-bold text-emerald-400">極高確定 (延續專案已簽約)</td>
+                    <td class="py-2.5 text-right">6案 / 69,021,931</td>
+                    <td class="py-2.5 text-right">0案 / 0</td>
+                    <td class="py-2.5 text-right font-bold text-white">69,021,931</td>
+                    <td class="py-2.5 text-right text-emerald-400">10.5%</td>
+                  </tr>
+                  <tr>
+                    <td class="py-2.5 font-sans font-bold text-sky-400">高確定性 (勝率 ≥ 80%)</td>
+                    <td class="py-2.5 text-right">8案 / 103,553,392</td>
+                    <td class="py-2.5 text-right">4案 / 67,448,323</td>
+                    <td class="py-2.5 text-right font-bold text-white">171,001,715</td>
+                    <td class="py-2.5 text-right text-sky-400">26.1%</td>
+                  </tr>
+                  <tr class="bg-amber-500/10">
+                    <td class="py-2.5 font-sans font-bold text-amber-300">中確定性主力 (勝率 50%~79%)</td>
+                    <td class="py-2.5 text-right">3案 / 122,919,857</td>
+                    <td class="py-2.5 text-right">0案 / 0</td>
+                    <td class="py-2.5 text-right font-bold text-amber-300">122,919,857</td>
+                    <td class="py-2.5 text-right text-amber-300">18.8%</td>
+                  </tr>
+                  <tr class="bg-amber-500/10">
+                    <td class="py-2.5 font-sans font-bold text-amber-400">中確定性關鍵 (勝率 40%~49%)</td>
+                    <td class="py-2.5 text-right">4案 / 54,789,002</td>
+                    <td class="py-2.5 text-right">2案 / 110,504,587</td>
+                    <td class="py-2.5 text-right font-bold text-amber-400">165,293,589</td>
+                    <td class="py-2.5 text-right text-amber-400">25.2%</td>
+                  </tr>
+                  <tr>
+                    <td class="py-2.5 font-sans text-slate-400">低確定性長尾 (勝率 &lt; 40%)</td>
+                    <td class="py-2.5 text-right">26案 / 112,755,240</td>
+                    <td class="py-2.5 text-right">3案 / 14,207,775</td>
+                    <td class="py-2.5 text-right text-slate-300">126,963,015</td>
+                    <td class="py-2.5 text-right text-slate-400">19.4%</td>
+                  </tr>
+                  <tr class="bg-slate-800/70 font-bold">
+                    <td class="py-2.5 font-sans text-white">總計 (50案機會 + 6案延續)</td>
+                    <td class="py-2.5 text-right text-emerald-400">47案 / 463,039,422</td>
+                    <td class="py-2.5 text-right text-amber-400">9案 / 192,160,685</td>
+                    <td class="py-2.5 text-right text-white">655,200,107</td>
+                    <td class="py-2.5 text-right">100.0%</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="p-3.5 rounded-xl bg-slate-900 border border-slate-700 text-xs text-slate-300">
+              📌 <strong>確定性基盤 (延續 + 勝率≥80%)：</strong>合計 <strong>2.40 億元 (36.6%)</strong> 已高度鎖定（含丸紅東南實業雙案、津谷食品、和富工業、三星螺絲、城鋒等 100% 必拿案）。
+            </div>
+          </div>
+
+          <div class="lg:col-span-5 flex flex-col justify-between space-y-4">
+            <div class="glass-panel p-5 rounded-xl border-l-4 border-l-amber-400 flex-1">
+              <h3 class="text-sm font-bold text-amber-300 mb-2">🎯 決勝核心：40%~79%「中確定性 9 大主力案」占 44.0% (2.88 億)</h3>
+              <p class="text-xs text-slate-300 mb-3">
+                要拉高 FY2027 實質營收，資源不應平均分散在 29 個低勝率小案，而應成立<strong>「總經理級專案攻堅小組」</strong>鎖定以下 5 大指標案，將勝率從 40%~60% 推升至 80%~100%：
+              </p>
+              <ul class="space-y-2 text-xs">
+                <li class="p-2.5 rounded-lg bg-slate-900/90 border border-slate-800 flex justify-between">
+                  <span>1. <strong>(建坤) 台糖高雄大型車停車場 (19MW)</strong></span>
+                  <span class="font-num text-amber-300">總額 10.45億｜目前勝率 40%</span>
+                </li>
+                <li class="p-2.5 rounded-lg bg-slate-900/90 border border-slate-800 flex justify-between">
+                  <span>2. <strong>(建坤) 台糖明正停車場 (6MW)</strong></span>
+                  <span class="font-num text-amber-300">總額 3.30億｜目前勝率 40%</span>
+                </li>
+                <li class="p-2.5 rounded-lg bg-slate-900/90 border border-slate-800 flex justify-between">
+                  <span>3. <strong>日煙 屋頂型光電 (5MW)</strong></span>
+                  <span class="font-num text-sky-300">總額 1.75億｜目前勝率 60%</span>
+                </li>
+                <li class="p-2.5 rounded-lg bg-slate-900/90 border border-slate-800 flex justify-between">
+                  <span>4. <strong>中山大學微電網 (3MW)</strong></span>
+                  <span class="font-num text-sky-300">總額 0.90億｜目前勝率 40%</span>
+                </li>
+                <li class="p-2.5 rounded-lg bg-slate-900/90 border border-slate-800 flex justify-between">
+                  <span>5. <strong>中永峰 路竹漁電室內養殖場 (1.44MW)</strong></span>
+                  <span class="font-num text-sky-300">總額 0.40億｜目前勝率 50%</span>
+                </li>
+              </ul>
+            </div>
+            <div class="glass-panel p-4 rounded-xl border-l-4 border-l-sky-400 text-xs">
+              <div class="font-bold text-sky-300 mb-1">⚡ 勝率提拉槓桿效應：</div>
+              <p class="text-slate-300">僅需將「日煙 (60%→100%)」與「中山大學微電網 (40%→80%)」兩案拿下，不需增加任何新開發案，2027 當期認列營收即可直接增加 <strong>+9,643 萬元</strong>！</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- SLIDE 4: 資產管理 (建坤) 9 案明細與 4.08 億缺口破局 -->
+        <div v-if="currentSlide === 3" class="flex-1 grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+          <div class="lg:col-span-7 glass-panel p-5 rounded-xl overflow-x-auto">
+            <h3 class="text-sm font-bold text-amber-300 mb-3">🏢 資產管理 (建坤) 全部 9 案明細表 (總容量 31,152 kWp)</h3>
+            <table class="w-full text-left text-xs">
+              <thead>
+                <tr class="border-b border-slate-700 text-slate-400">
+                  <th class="py-2">案件名稱</th>
+                  <th class="py-2 text-right">容量(kWp)</th>
+                  <th class="py-2 text-right">機會總額</th>
+                  <th class="py-2 text-right">勝率</th>
+                  <th class="py-2 text-right">加權簽約額</th>
+                  <th class="py-2 text-right">2027營收推估</th>
+                  <th class="py-2 text-center">預計施工~竣工</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-800 font-num">
+                <tr v-for="item in amOpportunities" :key="item.code" :class="item.name.includes('台糖') ? 'bg-amber-500/10' : ''">
+                  <td class="py-2 font-sans font-semibold text-white">{{ item.name }}</td>
+                  <td class="py-2 text-right">{{ formatNumber(item.capacity_kwp) }}</td>
+                  <td class="py-2 text-right text-slate-300">{{ formatNumber(item.total_amount) }}</td>
+                  <td class="py-2 text-right">
+                    <span class="px-1.5 py-0.5 rounded text-[10px]" :class="item.win_rate>=0.8 ? 'bg-emerald-500/20 text-emerald-300' : (item.win_rate>=0.4 ? 'bg-amber-500/20 text-amber-300' : 'bg-slate-700 text-slate-300')">
+                      {{ Math.round(item.win_rate * 100) }}%
+                    </span>
+                  </td>
+                  <td class="py-2 text-right text-sky-300">{{ formatNumber(item.sign_amount) }}</td>
+                  <td class="py-2 text-right font-bold text-amber-300">{{ formatNumber(item.rev_2027) }}</td>
+                  <td class="py-2 text-center text-[11px] text-slate-400">{{ item.start_date.slice(0,7) }}~{{ item.m_accept }}</td>
+                </tr>
+                <tr class="bg-slate-800/80 font-bold text-white">
+                  <td class="py-2.5 font-sans">資產管理合計 (9案)</td>
+                  <td class="py-2.5 text-right">31,152</td>
+                  <td class="py-2.5 text-right">1,586,232,116</td>
+                  <td class="py-2.5 text-right">41.1%</td>
+                  <td class="py-2.5 text-right text-sky-300">651,721,048</td>
+                  <td class="py-2.5 text-right text-amber-400">192,160,685</td>
+                  <td class="py-2.5 text-center text-rose-400">遞延 4.59 億</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="lg:col-span-5 flex flex-col justify-between space-y-3">
+            <div class="glass-panel p-4 rounded-xl border-l-4 border-l-rose-500">
+              <h4 class="text-xs font-bold text-rose-400 uppercase">問題核心診斷 (Root Cause)</h4>
+              <p class="text-xs text-slate-200 mt-1 leading-relaxed">
+                台糖兩大停車場案名目總額高達 <strong>13.75 億元</strong>，加權簽約額 <strong>5.50 億元</strong>。但因設定 <code>2027/05 簽約 → 2027/09 施工許可 → 2027/10 開工 → 2027/12 主設備進場 → 2028/05 竣工</code>，導致 2027 年僅認列 20.09%（<strong>1.105 億元</strong>），高達 <strong>4.395 億元</strong> 被推遲至 2028 年！
+              </p>
+            </div>
+
+            <div class="glass-panel p-4 rounded-xl border-l-4 border-l-emerald-400 space-y-2.5">
+              <h4 class="text-xs font-bold text-emerald-400">🚀 協助事業代表：彌平 4.08 億缺口的三大具體對策</h4>
+              <div class="text-xs space-y-2 text-slate-200">
+                <div class="p-2.5 rounded-lg bg-slate-900/90 border border-slate-800">
+                  <strong class="text-sky-300">對策 A（時程前移 3 個月＋主設備進場里程碑認列）：</strong><br/>
+                  2026 Q4 預審結構與台電饋線，簽約月由 2027/05 提早至 2027/03，開工提早至 2027/07；且由於 <code>2027/12 主設備進場</code>，依 EPC/資產建置進度於主設備進場認列 55%~65% 進度加上勝率提升至 65%，2027 即可多認列 <strong>+2.47 億元</strong>！
+                </div>
+                <div class="p-2.5 rounded-lg bg-slate-900/90 border border-slate-800">
+                  <strong class="text-amber-300">對策 B（埔美國際 3.3MW 轉高勝率與提早開工）：</strong><br/>
+                  埔美國際總額 1.155 億（目前勝率僅估 20%、2027/09 才開工）。透過集團租賃讓利或分割標段將勝率拉至 60% 並於 Q2 開工，可再增 <strong>+4,500 萬元</strong>。
+                </div>
+                <div class="p-2.5 rounded-lg bg-slate-900/90 border border-slate-800">
+                  <strong class="text-emerald-300">對策 C（電廠收購/老舊整改專案 短平快交割）：</strong><br/>
+                  Slide 2 策略明訂資產管理含「電廠整改、電廠收購」，惟目前 9 案皆為新建屋頂/地面。建議新增 3~5MW 二手電廠收購技改包（交割週期 3~4 個月），於 2027 創造 <strong>+1.2 億元</strong> 即時營收。
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SLIDE 5: 統包工程 (EPC) 前十大案件與超額成長策略 -->
+        <div v-if="currentSlide === 4" class="flex-1 grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+          <div class="lg:col-span-7 glass-panel p-5 rounded-xl overflow-x-auto">
+            <div class="flex justify-between items-center mb-3">
+              <h3 class="text-sm font-bold text-emerald-300">⚡ 統包工程 (EPC) 前 10 大主力案件明細 (占 EPC 新案 73.1%)</h3>
+              <span class="text-xs text-slate-400 font-num">共 41 案機會 (3.94億) + 6 案延續 (0.69億) = 4.63 億</span>
+            </div>
+            <table class="w-full text-left text-xs">
+              <thead>
+                <tr class="border-b border-slate-700 text-slate-400">
+                  <th class="py-2">案件名稱</th>
+                  <th class="py-2 text-center">類型</th>
+                  <th class="py-2 text-right">容量(kWp)</th>
+                  <th class="py-2 text-right">機會總額</th>
+                  <th class="py-2 text-right">勝率</th>
+                  <th class="py-2 text-right">加權簽約額</th>
+                  <th class="py-2 text-right">2027營收推估</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-800 font-num">
+                <tr v-for="item in top10EpcOpportunities" :key="item.code">
+                  <td class="py-2 font-sans font-semibold text-white">{{ item.name }}</td>
+                  <td class="py-2 text-center font-sans">
+                    <span class="px-1.5 py-0.5 rounded bg-slate-800 text-sky-300 text-[10px]">{{ item.opp_type }}</span>
+                  </td>
+                  <td class="py-2 text-right">{{ formatNumber(item.capacity_kwp) }}</td>
+                  <td class="py-2 text-right text-slate-400">{{ formatNumber(item.total_amount) }}</td>
+                  <td class="py-2 text-right">
+                    <span class="px-1.5 py-0.5 rounded text-[10px]" :class="item.win_rate>=0.8 ? 'bg-emerald-500/20 text-emerald-300' : (item.win_rate>=0.4 ? 'bg-amber-500/20 text-amber-300' : 'bg-rose-500/20 text-rose-300')">
+                      {{ Math.round(item.win_rate * 100) }}%
+                    </span>
+                  </td>
+                  <td class="py-2 text-right text-sky-300">{{ formatNumber(item.sign_amount) }}</td>
+                  <td class="py-2 text-right font-bold text-emerald-400">{{ formatNumber(item.rev_2027) }}</td>
+                </tr>
+                <tr class="bg-slate-800/80 font-bold text-white">
+                  <td class="py-2 font-sans" colspan="2">前 10 大合計 (占 EPC 新案 73.1%)</td>
+                  <td class="py-2 text-right">32,799</td>
+                  <td class="py-2 text-right">1,395,991,020</td>
+                  <td class="py-2 text-right">-</td>
+                  <td class="py-2 text-right text-sky-300">305,640,358</td>
+                  <td class="py-2.5 text-right text-emerald-400">288,202,134</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="lg:col-span-5 flex flex-col justify-between space-y-4">
+            <div class="glass-panel p-4 rounded-xl border-l-4 border-l-sky-400">
+              <h4 class="text-xs font-bold text-sky-300">📦 統包工程產品組合多元轉型 (54,313 kWp)</h4>
+              <div class="grid grid-cols-2 gap-2.5 mt-3 text-xs">
+                <div class="p-2.5 rounded-lg bg-slate-900 border border-slate-800">
+                  <div class="text-slate-400">工業自用屋頂 (26案)</div>
+                  <div class="font-num font-bold text-white text-sm mt-0.5">2.46 億元 (62.5%)</div>
+                  <div class="text-[10px] text-emerald-400">日煙 5MW、丸紅東南實業、中永峰</div>
+                </div>
+                <div class="p-2.5 rounded-lg bg-slate-900 border border-slate-800">
+                  <div class="text-slate-400">大學與防災微電網 (5案)</div>
+                  <div class="font-num font-bold text-white text-sm mt-0.5">0.81 億元 (20.5%)</div>
+                  <div class="text-[10px] text-sky-400">中山、高科、嘉大、宜大、防災型</div>
+                </div>
+                <div class="p-2.5 rounded-lg bg-slate-900 border border-slate-800">
+                  <div class="text-slate-400">地面與農漁電 (5案)</div>
+                  <div class="font-num font-bold text-white text-sm mt-0.5">0.30 億元 (7.7%)</div>
+                  <div class="text-[10px] text-amber-300">桃苗中壢廠、穩懋、申豐、台南公學</div>
+                </div>
+                <div class="p-2.5 rounded-lg bg-slate-900 border border-slate-800">
+                  <div class="text-slate-400">錶後儲能與水面整改 (5案)</div>
+                  <div class="font-num font-bold text-white text-sm mt-0.5">0.37 億元 (9.3%)</div>
+                  <div class="text-[10px] text-purple-300">高榮儲能、國泰埤塘整改、廠房附屬</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="glass-panel p-4 rounded-xl border-l-4 border-l-emerald-400 flex-1 flex flex-col justify-between">
+              <div>
+                <h4 class="text-xs font-bold text-emerald-400 mb-2">💡 統包工程衝刺 5.8 億（代償資產管理缺口）三大戰術</h4>
+                <ul class="space-y-2 text-xs text-slate-200">
+                  <li>✅ <strong>1. 複製「中山大學微電網」模組至校園標案群：</strong>結合石龜國小微電網實績，將中山(40%)、高科大(10%)、嘉大(10%) 打包為「校園韌性微電網標準方案」，毛利率由 10% 優化至 13.5%。</li>
+                  <li>✅ <strong>2. 大型屋頂「光＋儲」聯賣激活低勝率巨案：</strong>針對 <strong>東陽實業新市廠 (9.6MW / 3.36億，目前勝率僅估 5%)</strong> 與 <strong>高雄榮總錶後儲能 (3.0億，勝率 5%)</strong>，導入用電大戶錶後儲能削峰填谷試算，只要其中一案勝率突破至 30%，即可貢獻 +7,500 萬營收。</li>
+                  <li>✅ <strong>3. 外商丸紅與日煙指標客戶深耕：</strong>東南實業台中/彰化(丸紅) 已 100% 鎖定 (4,863萬)，全力確保 Q1 主設備如期進場、Q2 併聯驗收，實現上半年高現金流回籠。</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SLIDE 6: 2027 每月營收推估與工程節點熱區 -->
+        <div v-if="currentSlide === 5" class="flex-1 grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+          <div class="lg:col-span-7 glass-panel p-5 rounded-xl flex flex-col justify-between">
+            <div>
+              <h3 class="text-sm font-bold text-sky-300 mb-2">📅 2027 月度營收認列推估與累計成長曲線 (單位：萬元)</h3>
+              <p class="text-xs text-slate-400 mb-3">上半年以 EPC 與丸紅/建坤中小型屋頂為主；Q4 因台糖雙案與延續專案密集認列，單季衝上 2.60 億元。</p>
+              <div class="grid grid-cols-4 sm:grid-cols-6 gap-2 text-center font-num text-xs">
+                <div v-for="(mName, idx) in fyData.monthly_2027.months" :key="mName" class="p-2.5 rounded-lg bg-slate-900 border border-slate-800">
+                  <div class="text-slate-400 font-sans text-[11px]">{{ mName }}</div>
+                  <div class="font-bold text-sm mt-1" :class="idx>=9 ? 'text-amber-300' : 'text-sky-300'">
+                    {{ (fyData.monthly_2027.total_rev[idx] / 10000).toFixed(0) }}萬
+                  </div>
+                  <div class="text-[10px] text-slate-500 mt-0.5">
+                    延續 {{ (fyData.monthly_2027.carryover[idx] / 10000).toFixed(0) }}萬
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Milestone Heatmap Table -->
+            <div class="mt-4">
+              <h4 class="text-xs font-bold text-amber-300 mb-2">🔥 2027 工程五大關鍵節點月度分佈熱區 (50 案共 195 個階段節點)</h4>
+              <div class="overflow-x-auto">
+                <table class="w-full text-center text-[11px] font-num">
+                  <thead>
+                    <tr class="border-b border-slate-700 text-slate-400">
+                      <th class="py-1.5 text-left font-sans">工程階段</th>
+                      <th class="py-1.5">26前</th>
+                      <th v-for="m in 12" :key="m" class="py-1.5">{{ m }}月</th>
+                      <th class="py-1.5 text-sky-300">27合計</th>
+                      <th class="py-1.5 text-rose-400">28後</th>
+                    </tr>
+                  </thead>
+                  <tbody class="divide-y divide-slate-800">
+                    <tr>
+                      <td class="py-1.5 text-left font-sans font-semibold">① 簽約</td>
+                      <td class="text-slate-400">24</td>
+                      <td>4</td><td>2</td><td class="bg-amber-500/20 text-amber-300 font-bold">9</td><td>4</td><td>2</td><td>5</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td>
+                      <td class="font-bold text-sky-300">26</td><td>0</td>
+                    </tr>
+                    <tr>
+                      <td class="py-1.5 text-left font-sans font-semibold">② 同意備案/施工許可</td>
+                      <td class="text-slate-400">-</td>
+                      <td class="bg-sky-500/20">7</td><td class="bg-sky-500/20 font-bold">9</td><td>4</td><td>1</td><td class="bg-amber-500/20 text-amber-300 font-bold">10</td><td>4</td><td>2</td><td>2</td><td>5</td><td>-</td><td>6</td><td>-</td>
+                      <td class="font-bold text-sky-300">50</td><td>0</td>
+                    </tr>
+                    <tr>
+                      <td class="py-1.5 text-left font-sans font-semibold">③ 主設備進場</td>
+                      <td class="text-slate-400">-</td>
+                      <td>1</td><td>1</td><td>4</td><td>1</td><td class="bg-rose-500/20 text-rose-300 font-bold">10</td><td>3</td><td>1</td><td class="bg-rose-500/20 text-rose-300 font-bold">10</td><td>5</td><td>3</td><td>2</td><td>3</td>
+                      <td class="font-bold text-sky-300">44</td><td class="text-rose-400">6</td>
+                    </tr>
+                    <tr>
+                      <td class="py-1.5 text-left font-sans font-semibold">④ 併聯掛錶</td>
+                      <td class="text-slate-400">-</td>
+                      <td>-</td><td>2</td><td>-</td><td>4</td><td>-</td><td class="bg-emerald-500/20 text-emerald-300 font-bold">10</td><td>4</td><td>1</td><td>6</td><td>7</td><td>2</td><td>4</td>
+                      <td class="font-bold text-sky-300">40</td><td class="text-rose-400">10</td>
+                    </tr>
+                    <tr>
+                      <td class="py-1.5 text-left font-sans font-semibold">⑤ 竣工驗收</td>
+                      <td class="text-slate-400">-</td>
+                      <td>-</td><td>1</td><td>1</td><td>1</td><td>3</td><td>-</td><td class="bg-emerald-500/20 text-emerald-300 font-bold">9</td><td>4</td><td>2</td><td>4</td><td>5</td><td>5</td>
+                      <td class="font-bold text-sky-300">35</td><td class="text-rose-400">15</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <div class="lg:col-span-5 flex flex-col justify-between space-y-4">
+            <div class="glass-panel p-5 rounded-xl border-l-4 border-l-rose-500">
+              <h4 class="text-xs font-bold text-rose-400 mb-2">⚠️ 工程與供應鏈三大瓶頸預警</h4>
+              <ul class="space-y-2.5 text-xs text-slate-200">
+                <li>1. <strong>3 月簽約洪峰 (9案) 與 5 月行政取照洪峰 (10案)：</strong>若 3 月簽約延誤 1 個月，將連鎖導致 Q3/Q4 併聯來不及於 2027 年底前認列。</li>
+                <li>2. <strong>5 月與 8 月「主設備進場雙高峰」(各 10 案同月進場)：</strong>模組、變流器與升壓變壓器集中於 5 月與 8 月交貨，若未提前鎖定框架採購與吊裝工班，必發生缺工缺料延宕。</li>
+                <li>3. <strong>15 案竣工驗收跨入 2028 年：</strong>50 案中有 15 案竣工驗收落在 2028 年，必須在合約中拆細「設備到場款」與「併聯款」驗收節點，避免營收全卡在最後竣工尾款。</li>
+              </ul>
+            </div>
+
+            <div class="glass-panel p-5 rounded-xl border-l-4 border-l-sky-400">
+              <h4 class="text-xs font-bold text-sky-300 mb-2">🛠️ 營運交付保障行動 (Action Plan)</h4>
+              <p class="text-xs text-slate-300 leading-relaxed">
+                • <strong>Q1 啟動聯合集採：</strong>針對 5 月與 8 月進場之 20 案（合計逾 30MW），於 2027 Q1 統一下單鎖定變壓器與大容量 PCS 交期。<br/>
+                • <strong>建立「雙週取照追蹤表」：</strong>針對 1~2 月 16 案同意備案/施工許可，指派專責法規工程師駐點追蹤縣市政府與台電區處審查。
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- SLIDE 7: 維運事業 (O&M) 1.01 億預算與毛利結構 -->
+        <div v-if="currentSlide === 6" class="flex-1 grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+          <div class="lg:col-span-7 glass-panel p-5 rounded-xl flex flex-col justify-between">
+            <div>
+              <h3 class="text-sm font-bold text-emerald-300 mb-3">🛡️ FY2027 維運預算 (O&M) 雙引擎結構：128 筆長約基盤 ＋ 20 筆商機修繕</h3>
+              <table class="w-full text-left text-xs lg:text-sm">
+                <thead>
+                  <tr class="border-b border-slate-700 text-slate-400">
+                    <th class="py-2">預算類別</th>
+                    <th class="py-2 text-right">筆數</th>
+                    <th class="py-2 text-right">2027 營收 (元)</th>
+                    <th class="py-2 text-right">占營收</th>
+                    <th class="py-2 text-right">2027 毛利 (元)</th>
+                    <th class="py-2 text-right">毛利率</th>
+                    <th class="py-2 text-right">占總毛利</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-800 font-num">
+                  <tr class="bg-emerald-950/20">
+                    <td class="py-3 font-sans font-bold text-emerald-300">① JDE 維運長約基盤</td>
+                    <td class="py-3 text-right">128 筆</td>
+                    <td class="py-3 text-right font-bold text-white">41,111,249</td>
+                    <td class="py-3 text-right">40.7%</td>
+                    <td class="py-3 text-right font-bold text-emerald-400">14,388,952</td>
+                    <td class="py-3 text-right text-emerald-400 font-bold">35.0%</td>
+                    <td class="py-3 text-right text-emerald-400 font-bold">61.6%</td>
+                  </tr>
+                  <tr class="bg-amber-950/20">
+                    <td class="py-3 font-sans font-bold text-amber-300">② 新增維運與修繕機會</td>
+                    <td class="py-3 text-right">20 筆</td>
+                    <td class="py-3 text-right font-bold text-white">59,824,937</td>
+                    <td class="py-3 text-right">59.3%</td>
+                    <td class="py-3 text-right font-bold text-amber-300">8,976,124</td>
+                    <td class="py-3 text-right text-amber-300 font-bold">15.0%</td>
+                    <td class="py-3 text-right text-amber-300 font-bold">38.4%</td>
+                  </tr>
+                  <tr class="bg-slate-800/80 font-bold text-white">
+                    <td class="py-3 font-sans">維運年度預算總計</td>
+                    <td class="py-3 text-right">148 筆</td>
+                    <td class="py-3 text-right text-sky-300">100,936,186</td>
+                    <td class="py-3 text-right">100.0%</td>
+                    <td class="py-3 text-right text-emerald-300">23,365,076</td>
+                    <td class="py-3 text-right text-sky-300">23.15%</td>
+                    <td class="py-3 text-right">100.0%</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Quarterly O&M Table -->
+            <div class="mt-4">
+              <h4 class="text-xs font-bold text-sky-300 mb-2">📊 2027 維運季度營收與毛利率走勢（Q2~Q3 修繕高峰）</h4>
+              <div class="grid grid-cols-4 gap-3 text-center font-num text-xs">
+                <div class="p-3 rounded-xl bg-slate-900 border border-slate-800">
+                  <div class="text-slate-400 font-sans">Q1 第一季</div>
+                  <div class="text-sm font-bold text-white mt-1">2,085 萬</div>
+                  <div class="text-[11px] text-emerald-400 mt-0.5">毛利 524萬 (25.1%)</div>
+                </div>
+                <div class="p-3 rounded-xl bg-slate-900 border border-amber-500/40">
+                  <div class="text-amber-300 font-sans font-bold">Q2 第二季 (高峰)</div>
+                  <div class="text-sm font-bold text-amber-300 mt-1">3,025 萬</div>
+                  <div class="text-[11px] text-slate-300 mt-0.5">毛利 664萬 (21.9%)</div>
+                </div>
+                <div class="p-3 rounded-xl bg-slate-900 border border-amber-500/40">
+                  <div class="text-amber-300 font-sans font-bold">Q3 第三季</div>
+                  <div class="text-sm font-bold text-amber-300 mt-1">2,808 萬</div>
+                  <div class="text-[11px] text-slate-300 mt-0.5">毛利 624萬 (22.2%)</div>
+                </div>
+                <div class="p-3 rounded-xl bg-slate-900 border border-slate-800">
+                  <div class="text-slate-400 font-sans">Q4 第四季</div>
+                  <div class="text-sm font-bold text-white mt-1">2,176 萬</div>
+                  <div class="text-[11px] text-emerald-400 mt-0.5">毛利 525萬 (24.1%)</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Top 10 JDE Contracts -->
+          <div class="lg:col-span-5 glass-panel p-5 rounded-xl flex flex-col justify-between">
+            <div>
+              <h3 class="text-sm font-bold text-sky-300 mb-2">🏆 前 10 大 JDE 維運合約 (占長約基盤 50.8% / 毛利率皆 35%)</h3>
+              <div class="space-y-1.5 text-xs font-num">
+                <div v-for="(c, idx) in top10OmContracts" :key="c.code" class="flex justify-between items-center py-1.5 px-2.5 rounded bg-slate-900/80 border border-slate-800/80">
+                  <span class="font-sans text-slate-200 truncate pr-2">{{ idx+1 }}. {{ c.name }}</span>
+                  <span class="text-emerald-400 font-bold whitespace-nowrap">{{ formatNumber(c.rev_2027) }} ({{ ((c.rev_2027/41111249)*100).toFixed(1) }}%)</span>
+                </div>
+              </div>
+            </div>
+            <div class="p-3 rounded-xl bg-emerald-950/40 border border-emerald-500/40 text-xs text-emerald-200 mt-3">
+              💡 <strong>長約護城河：</strong>4,111 萬 JDE 合約貢獻了全維運部門 <strong>61.6% 的毛利（1,439 萬元）</strong>，且前十大客戶（PROJECT AMEI 漁電、永堯能源、中租五甲尾、群創、新日光、雲豹矽品）續約穩定度極高。
+            </div>
+          </div>
+        </div>
+
+        <!-- SLIDE 8: 維運機會 5,982 萬拆解與「預估佔位」去水分策略 -->
+        <div v-if="currentSlide === 7" class="flex-1 grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+          <div class="lg:col-span-6 glass-panel p-5 rounded-xl flex flex-col justify-between">
+            <div>
+              <h3 class="text-sm font-bold text-amber-300 mb-3">🔍 維運機會 20 筆 (5,982.5 萬) 三層結構拆解</h3>
+              <div class="space-y-3">
+                <div class="p-4 rounded-xl bg-rose-950/30 border border-rose-500/40">
+                  <div class="flex justify-between items-center">
+                    <span class="text-xs font-bold text-rose-300">① 預估佔位 (無具名客戶，共 4 筆)</span>
+                    <span class="font-num font-bold text-rose-400 text-base">37,500,000 元 (62.7%)</span>
+                  </div>
+                  <p class="text-xs text-slate-300 mt-1">占整個維運總預算 37.2%！包含：外來案維運佔位 (1,000萬)、既有客戶服務升級 (1,000萬)、大型修繕案佔位 (1,000萬)、分散型小案修繕 (750萬)。</p>
+                </div>
+
+                <div class="p-4 rounded-xl bg-amber-950/30 border border-amber-500/40">
+                  <div class="flex justify-between items-center">
+                    <span class="text-xs font-bold text-amber-300">② 具名大型修繕專案 (1 筆)</span>
+                    <span class="font-num font-bold text-amber-300 text-base">13,891,500 元 (23.2%)</span>
+                  </div>
+                  <p class="text-xs text-slate-300 mt-1"><strong>修繕工程_旭忠(水上型) 3-6_1852.2KW</strong>（勝率 50%，預計 2027 年 2~7 月執行，每月認列 231.5 萬）。</p>
+                </div>
+
+                <div class="p-4 rounded-xl bg-sky-950/30 border border-sky-500/40">
+                  <div class="flex justify-between items-center">
+                    <span class="text-xs font-bold text-sky-300">③ 具名外來維運機會 (15 筆)</span>
+                    <span class="font-num font-bold text-sky-300 text-base">8,433,437 元 (14.1%)</span>
+                  </div>
+                  <p class="text-xs text-slate-300 mt-1">主力包含：BP_LOOP2 學甲漁電 20MW (262.5萬)、國泰外來案 20MW (250萬)、永鑫外來案 27MW (99萬)、奇美綠園道 15.3MW (91.2萬) 等。</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="lg:col-span-6 glass-panel p-5 rounded-xl flex flex-col justify-between space-y-4">
+            <div>
+              <h3 class="text-sm font-bold text-emerald-400 mb-3">🎯 協助維運代表：回答董總「3,750萬佔位如何落地」與毛利拉升方案</h3>
+              <div class="space-y-3 text-xs text-slate-200">
+                <div class="p-3.5 rounded-xl bg-slate-900 border border-slate-700">
+                  <div class="font-bold text-sky-300 mb-1">策略一：將 3,750 萬「無具名佔位」綁定既有 128 案客戶資產包</div>
+                  <p class="text-slate-300 leading-relaxed">
+                    向董總報告：3,750 萬並非憑空預估，而是針對 JDE 既有 128 個案場（運轉逾 5~8 年）進行<strong>「預防性技改與服務升級配額」</strong>：<br/>
+                    • <strong>既有客戶服務升級 (1,000萬)：</strong>導入無人機熱顯像巡檢、AI 清洗排程與 I-V Curve 診斷加值包。<br/>
+                    • <strong>大型與分散型修繕 (1,750萬)：</strong>鎖定中租、奇美、群創、永堯等老舊變流器 (Inverter) 延保換機與水面浮筒加固工程。<br/>
+                    • <strong>外來案代操 (1,000萬)：</strong>主攻國泰(20MW)、永鑫(27MW)、BP(39MW) 等孤兒案場轉單接管。
+                  </p>
+                </div>
+
+                <div class="p-3.5 rounded-xl bg-slate-900 border border-slate-700">
+                  <div class="font-bold text-emerald-300 mb-1">策略二：排查 JDE 8 筆「金額為 0」之異常合約，並拉升新案毛利率 (15%→22%)</div>
+                  <p class="text-slate-300 leading-relaxed">
+                    • <strong>JDE 零元合約清查：</strong>Excel 第 64~115 列共有 8 筆合約（台糖嘉義貴舍/荷包嶼、立農安泰、東毓匯僑、特力屋左營/內湖、中苗栗七案、觀音儲能）2027 預估為 0 元，若為續約換約過渡期，追回續約可再增 <strong>+300~500 萬高毛利(35%)營收</strong>。<br/>
+                    • <strong>毛利結構優化：</strong>目前 20 筆新機會一律保守填 15% 毛利率，拉低整體毛利率至 23.15%。若將「純代操外來案」定價毛利回歸 25%~30%，維運總毛利可由 2,337 萬提升至 <strong>2,750 萬元 (+17.7%)</strong>！
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SLIDE 9: FY2028 第二成長曲線 —— AIDC 算力中心電力統包 -->
+        <div v-if="currentSlide === 8" class="flex-1 flex flex-col justify-between space-y-5">
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
+            <!-- Madou 100MW -->
+            <div class="glass-panel p-5 rounded-2xl border-t-4 border-t-sky-400 flex flex-col justify-between">
+              <div>
+                <div class="flex justify-between items-center mb-2">
+                  <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-sky-500/20 text-sky-300">南部旗艦核心</span>
+                  <span class="font-num text-xs text-slate-400">勝率 20% 加權</span>
+                </div>
+                <h3 class="text-lg font-black text-white">100MW 算力中心（台南麻豆）</h3>
+                <div class="mt-3 flex items-baseline space-x-2 font-num">
+                  <span class="text-2xl font-black text-sky-400">NT$ 6.0 億</span>
+                  <span class="text-xs text-slate-400">（名目總額 30.0 億元）</span>
+                </div>
+                <p class="text-xs text-slate-300 mt-3 leading-relaxed">
+                  承接超大規模 AI 算力中心之 161kV 特高壓變電站、園區微電網與綠電直供 (CPPA) 整合工程，奠定南台灣最大算力電力交付標竿。
+                </p>
+              </div>
+              <div class="mt-4 pt-3 border-t border-slate-800 text-[11px] text-sky-300">
+                📌 2027 關鍵里程碑：完成台電特高壓系統衝擊分析與用地電力設計鎖定
+              </div>
+            </div>
+
+            <!-- Taoyuan 10MW -->
+            <div class="glass-panel p-5 rounded-2xl border-t-4 border-t-emerald-400 flex flex-col justify-between">
+              <div>
+                <div class="flex justify-between items-center mb-2">
+                  <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-500/20 text-emerald-300">北部算力卡位</span>
+                  <span class="font-num text-xs text-slate-400">勝率 20% 加權</span>
+                </div>
+                <h3 class="text-lg font-black text-white">10MW 算力中心（北部桃園）</h3>
+                <div class="mt-3 flex items-baseline space-x-2 font-num">
+                  <span class="text-2xl font-black text-emerald-400">NT$ 2.0 億</span>
+                  <span class="text-xs text-slate-400">（名目總額 10.0 億元）</span>
+                </div>
+                <p class="text-xs text-slate-300 mt-3 leading-relaxed">
+                  2027 提前卡位北部 AI 伺服器機房聚落，專攻資料中心「灰區 (Gray Space)」不斷電備援系統 (BESS + UPS + 柴油發電機併機控制)，建立跨區域交付能力。
+                </p>
+              </div>
+              <div class="mt-4 pt-3 border-t border-slate-800 text-[11px] text-emerald-300">
+                📌 2027 關鍵里程碑：結合桃苗/笨港儲能經驗，完成灰區機電統包資格認證
+              </div>
+            </div>
+
+            <!-- Chiahui 10MW -->
+            <div class="glass-panel p-5 rounded-2xl border-t-4 border-t-amber-400 flex flex-col justify-between">
+              <div>
+                <div class="flex justify-between items-center mb-2">
+                  <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-500/20 text-amber-300">南部雙核互補</span>
+                  <span class="font-num text-xs text-slate-400">勝率 20% 加權</span>
+                </div>
+                <h3 class="text-lg font-black text-white">10MW 算力中心（嘉義嘉惠）</h3>
+                <div class="mt-3 flex items-baseline space-x-2 font-num">
+                  <span class="text-2xl font-black text-amber-400">NT$ 2.0 億</span>
+                  <span class="text-xs text-slate-400">（名目總額 10.0 億元）</span>
+                </div>
+                <p class="text-xs text-slate-300 mt-3 leading-relaxed">
+                  延伸既有「嘉惠電力維運與一期整改/三期新建」深厚客情，於南部能源核心區位補位，與麻豆 100MW 案形成「南台灣算力雙核布局」。
+                </p>
+              </div>
+              <div class="mt-4 pt-3 border-t border-slate-800 text-[11px] text-amber-300">
+                📌 2027 關鍵里程碑：透過嘉惠光電整改案同步綁定算力中心前期電力規劃合約
+              </div>
+            </div>
+          </div>
+
+          <div class="glass-panel p-4 rounded-xl border border-sky-500/30 flex flex-wrap items-center justify-between gap-4">
+            <div class="text-xs text-slate-200">
+              <strong class="text-sky-300">🚀 為什麼進能服能贏下 AIDC？</strong> 從「光電 EPC」升級為「高可靠度電力交付統包商 (Power Delivery EPC)」，整合<strong>特高壓變電站＋錶後儲能備援＋綠電微電網</strong>，解決算力中心最痛的「饋線容量取得」與「綠電 PUE 合規」。
+            </div>
+            <div class="font-num text-sm font-black text-amber-300 bg-amber-500/10 px-3 py-1.5 rounded-lg border border-amber-500/30">
+              FY2028 算力潛在總池 50 億 ｜ 加權目標 10.0 億
+            </div>
+          </div>
+        </div>
+
+        <!-- SLIDE 10: 邁向 10 億達標路線圖與請董總裁示事項 -->
+        <div v-if="currentSlide === 9" class="flex-1 grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+          <div class="lg:col-span-7 glass-panel p-5 rounded-xl flex flex-col justify-between">
+            <div>
+              <h3 class="text-sm font-bold text-emerald-300 mb-3">🌉 從 6.55 億基準推估邁向 10.0 億集團目標「四大架橋路徑 (Bridge to 1B)」</h3>
+              <div class="space-y-2.5 text-xs">
+                <div class="p-3 rounded-lg bg-slate-900 border border-slate-700 flex justify-between items-center">
+                  <span><strong>基準線 (Baseline)：</strong>南區 2027 目前工進預估營收 (50案+6延續)</span>
+                  <span class="font-num font-bold text-white text-sm">6.55 億元</span>
+                </div>
+                <div class="p-3 rounded-lg bg-emerald-950/30 border border-emerald-500/40 flex justify-between items-center">
+                  <div>
+                    <div class="font-bold text-emerald-300">➕ 槓桿 1：台糖雙案時程前移 3 個月＋主設備進場認列＋勝率拉至 60%</div>
+                    <div class="text-[11px] text-slate-300">2027 Q1 預審設計，Q3 開工，12月主設備進場認列比由 20% 提升至 45%</div>
+                  </div>
+                  <span class="font-num font-bold text-emerald-400 text-sm">+2.47 億元</span>
+                </div>
+                <div class="p-3 rounded-lg bg-sky-950/30 border border-sky-500/40 flex justify-between items-center">
+                  <div>
+                    <div class="font-bold text-sky-300">➕ 槓桿 2：EPC 主力案勝率攻堅 (日煙 60%→90%、中山微電網 40%→80%)</div>
+                    <div class="text-[11px] text-slate-300">集中商務與技術資源鎖定前五大中勝率指標案</div>
+                  </div>
+                  <span class="font-num font-bold text-sky-400 text-sm">+0.81 億元</span>
+                </div>
+                <div class="p-3 rounded-lg bg-amber-950/30 border border-amber-500/40 flex justify-between items-center">
+                  <div>
+                    <div class="font-bold text-amber-300">➕ 槓桿 3：補勾漏計延續案 (普登學甲 1,367萬) ＋ 維運事業預算併計貢獻</div>
+                    <div class="text-[11px] text-slate-300">JDE 補填起訖日立即找回 0.14 億；若加計維運 1.01 億，總盤即突破 10.97 億</div>
+                  </div>
+                  <span class="font-num font-bold text-amber-400 text-sm">+0.14 ~ 1.15 億元</span>
+                </div>
+                <div class="p-3 rounded-lg bg-emerald-600/20 border-2 border-emerald-400 flex justify-between items-center">
+                  <span class="font-bold text-white text-sm">🎯 優化後 FY2027 全年預估達成總額</span>
+                  <span class="font-num font-black text-emerald-300 text-base">9.97 億 ～ 10.98 億元 (100%+ 達標)</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="lg:col-span-5 glass-panel p-5 rounded-xl border-l-4 border-l-amber-400 flex flex-col justify-between">
+            <div>
+              <h3 class="text-sm font-bold text-amber-300 mb-3">📝 提請董總核決與跨部門資源支援事項 (Executive Ask)</h3>
+              <ul class="space-y-3 text-xs text-slate-200">
+                <li class="p-3 rounded-lg bg-slate-900 border border-slate-800">
+                  <strong class="text-amber-300">1. 預算考核口徑裁示：</strong><br/>
+                  資產管理因台糖案工期跨年，建議考核採<strong>「簽約額 (6.52億) 權重 40% ＋ 當期工進認列營收權重 60%」</strong>，或核准於 2027/12 主設備進場節點依實質採購交付認列 50% 以上營收。
+                </li>
+                <li class="p-3 rounded-lg bg-slate-900 border border-slate-800">
+                  <strong class="text-sky-300">2. 台糖 25MW 與日煙 5MW 專案策略授權：</strong><br/>
+                  授權南區於 2026 Q4 預支結構技師簽證與台電衝擊分析前置費用（約 150 萬），換取 2027 年工期提前 3 個月。
+                </li>
+                <li class="p-3 rounded-lg bg-slate-900 border border-slate-800">
+                  <strong class="text-emerald-300">3. AIDC 電力交付專案小組 (Taskforce) 成立：</strong><br/>
+                  整合總公司特高壓機電、儲能與南區業務，專責推動麻豆 100MW 與嘉惠 10MW 前期設計綁規。
+                </li>
+              </ul>
+            </div>
+            <div class="flex justify-end space-x-2 mt-3">
+              <button @click="switchMode('simulator')" class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold shadow-lg">
+                前往「10億達標模擬器」現場推演 →
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bottom Slide Controls -->
+        <div class="mt-6 pt-4 border-t border-slate-800/80 flex items-center justify-between">
+          <button @click="prevSlide" :disabled="currentSlide === 0" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 disabled:opacity-40 text-xs font-bold transition">
+            ← 上一頁 (Prev)
+          </button>
+          <div class="text-xs text-slate-400 hidden sm:block">
+            提示：可使用鍵盤 <code>←</code> <code>→</code> 切換投影片，或點擊右上角「🎙️ 講稿提詞機」查看三段式顧問講稿
+          </div>
+          <button @click="nextSlide" :disabled="currentSlide === slides.length - 1" class="px-4 py-2 rounded-xl bg-sky-600 hover:bg-sky-500 disabled:opacity-40 text-xs font-bold text-white transition">
+            下一頁 (Next) →
+          </button>
+        </div>
+      </div>
+    </main>
+
+    <!-- =================================================================== -->
+    <!-- MODE 2: INTERACTIVE CHARTS CENTER (ECHARTS)                         -->
+    <!-- =================================================================== -->
+    <main v-show="activeMode === 'charts'" class="flex-1 max-w-[1600px] w-full mx-auto px-4 lg:px-8 py-6 space-y-6">
+      <div class="flex flex-wrap items-center justify-between gap-2">
+        <div>
+          <h2 class="text-xl font-black text-white">📈 FY2027 互動式商業圖表中心 (Excel 數據全動態視覺化)</h2>
+          <p class="text-xs text-slate-400">所有圖表皆直接由三個 Excel 檔案之真實數據驅動，支援滑鼠懸停檢視明細、圖例篩選與縮放。</p>
+        </div>
+        <button @click="resizeAllCharts" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs text-sky-300 border border-slate-700">
+          🔄 重新整理圖表尺寸
+        </button>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <!-- Chart 1: Target vs Forecast & Funnel -->
+        <div class="mckinsey-card p-5 rounded-2xl">
+          <div class="flex justify-between items-center mb-2">
+            <h3 class="text-sm font-bold text-sky-300">圖表 1 ｜ 南區業務目標 vs. 加權簽約額 vs. 2027 認列營收 (單位：萬元)</h3>
+            <span class="text-[11px] text-slate-400">來源：機會簽約與營收推估_2027.xlsx</span>
+          </div>
+          <div id="echart-target-gap" class="w-full h-[340px]"></div>
+        </div>
+
+        <!-- Chart 2: 2027 Monthly Revenue & Cumulative Curve -->
+        <div class="mckinsey-card p-5 rounded-2xl">
+          <div class="flex justify-between items-center mb-2">
+            <h3 class="text-sm font-bold text-emerald-300">圖表 2 ｜ 2027 每月營收推估堆疊圖與累計達成曲線 (延續+EPC+資管)</h3>
+            <span class="text-[11px] text-slate-400">全年合計：65,520 萬元</span>
+          </div>
+          <div id="echart-monthly-rev" class="w-full h-[340px]"></div>
+        </div>
+
+        <!-- Chart 3: Win-Rate Tier Stacked Bar -->
+        <div class="mckinsey-card p-5 rounded-2xl">
+          <div class="flex justify-between items-center mb-2">
+            <h3 class="text-sm font-bold text-amber-300">圖表 3 ｜ 勝率確定性區間分佈 (延續專案 / ≥80% / 50~79% / 40~49% / &lt;40%)</h3>
+            <span class="text-[11px] text-slate-400">中確定性 (40~79%) 占 44.0%</span>
+          </div>
+          <div id="echart-winrate-tier" class="w-full h-[340px]"></div>
+        </div>
+
+        <!-- Chart 4: O&M Quarterly & Monthly Revenue + Gross Margin % -->
+        <div class="mckinsey-card p-5 rounded-2xl">
+          <div class="flex justify-between items-center mb-2">
+            <h3 class="text-sm font-bold text-purple-300">圖表 4 ｜ 維運預算 (O&M) 1~12 月契約基盤 vs. 機會預估與毛利率曲線</h3>
+            <span class="text-[11px] text-slate-400">來源：維運預算_2027.xlsx (1.009 億)</span>
+          </div>
+          <div id="echart-om-monthly" class="w-full h-[340px]"></div>
+        </div>
+
+        <!-- Chart 5: Top 15 Opportunities Bubble / Bar Chart -->
+        <div class="mckinsey-card p-5 rounded-2xl lg:col-span-2">
+          <div class="flex justify-between items-center mb-2">
+            <h3 class="text-sm font-bold text-sky-300">圖表 5 ｜ 南區前 15 大主力案件「加權簽約額 vs. 2027當期認列 vs. 2028遞延額」對比分析 (單位：萬元)</h3>
+            <span class="text-[11px] text-slate-400">清楚呈現台糖雙案、日煙、三星螺絲、埔美國際之跨年遞延效應</span>
+          </div>
+          <div id="echart-top15-defer" class="w-full h-[380px]"></div>
+        </div>
+      </div>
+    </main>
+
+    <!-- =================================================================== -->
+    <!-- MODE 3: INTERACTIVE STRATEGY SIMULATOR & SUPABASE EXEC NOTES        -->
+    <!-- =================================================================== -->
+    <main v-if="activeMode === 'simulator'" class="flex-1 max-w-[1600px] w-full mx-auto px-4 lg:px-8 py-6 space-y-6">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <!-- Left 7 Cols: Interactive Target Simulator -->
+        <div class="lg:col-span-7 mckinsey-card p-6 rounded-2xl space-y-5">
+          <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-800 pb-4">
+            <div>
+              <span class="text-xs font-bold text-emerald-400 uppercase tracking-wider">WHAT-IF STRATEGY SIMULATOR</span>
+              <h2 class="text-xl font-black text-white mt-0.5">🎯 FY2027 邁向 10 億營收達標動態模擬器</h2>
+            </div>
+            <div class="flex space-x-2">
+              <button @click="applyPreset('baseline')" class="px-3 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs text-slate-300 border border-slate-700">
+                原始基準 (6.55億)
+              </button>
+              <button @click="applyPreset('target10b')" class="px-3 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-xs font-bold text-white shadow">
+                ⚡ 一鍵套用「10億達標建議方案」
+              </button>
+            </div>
+          </div>
+
+          <!-- Simulated Live KPI Banner -->
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div class="p-4 rounded-xl bg-slate-900/90 border border-slate-700">
+              <div class="text-xs text-slate-400">模擬後 南區 2027 營收</div>
+              <div class="text-2xl font-black font-num mt-1" :class="simResult.totalSouthRev >= 1000000000 ? 'text-emerald-400' : 'text-sky-400'">
+                NT$ {{ (simResult.totalSouthRev / 100000000).toFixed(2) }} 億
+              </div>
+              <div class="text-[11px] font-num mt-1" :class="simResult.gapTo1B >= 0 ? 'text-emerald-400' : 'text-rose-400'">
+                對標 10 億：{{ simResult.gapTo1B >= 0 ? '+' : '' }}{{ (simResult.gapTo1B / 10000).toFixed(0) }} 萬元
+              </div>
+            </div>
+            <div class="p-4 rounded-xl bg-slate-900/90 border border-slate-700">
+              <div class="text-xs text-slate-400">含維運 (O&M) 全事業總營收</div>
+              <div class="text-2xl font-black font-num text-amber-300 mt-1">
+                NT$ {{ (simResult.grandTotalWithOM / 100000000).toFixed(2) }} 億
+              </div>
+              <div class="text-[11px] text-slate-400 font-num mt-1">
+                維運貢獻：{{ (simResult.omRev / 10000).toFixed(0) }} 萬 (毛利 {{ (simResult.omMargin / 10000).toFixed(0) }} 萬)
+              </div>
+            </div>
+            <div class="p-4 rounded-xl bg-slate-900/90 border border-slate-700">
+              <div class="text-xs text-slate-400">模擬後 預估總毛利額 (南區+維運)</div>
+              <div class="text-2xl font-black font-num text-emerald-300 mt-1">
+                NT$ {{ (simResult.totalGrossMargin / 10000).toFixed(0) }} 萬
+              </div>
+              <div class="text-[11px] text-emerald-400 font-num mt-1">
+                較原始基準增加 +{{ ((simResult.totalGrossMargin - 115250000) / 10000).toFixed(0) }} 萬元
+              </div>
+            </div>
+          </div>
+
+          <!-- 6 Interactive Strategy Levers -->
+          <div class="space-y-4 text-xs">
+            <!-- Lever 1 -->
+            <div class="p-4 rounded-xl bg-slate-900/80 border border-slate-800 space-y-2">
+              <div class="flex justify-between items-center">
+                <label class="font-bold text-amber-300">槓桿 1 ｜ (建坤) 台糖雙案 (13.75億) 勝率提升 (原始 40%)</label>
+                <span class="font-num font-bold text-sm text-amber-400">{{ sim.taiscWinRate }}%</span>
+              </div>
+              <input type="range" min="40" max="100" step="5" v-model.number="sim.taiscWinRate" class="w-full accent-amber-400 cursor-pointer" />
+              <div class="flex justify-between text-[11px] text-slate-400">
+                <span>40% (原始預估)</span>
+                <span>60% (策略合作鎖定)</span>
+                <span>80% (得標簽約)</span>
+                <span>100%</span>
+              </div>
+            </div>
+
+            <!-- Lever 2 -->
+            <div class="p-4 rounded-xl bg-slate-900/80 border border-slate-800 space-y-2">
+              <div class="flex justify-between items-center">
+                <label class="font-bold text-amber-300">槓桿 2 ｜ 台糖雙案工期前移與 2027/12 主設備進場當期認列比例 (原始 20.1%)</label>
+                <span class="font-num font-bold text-sm text-amber-400">{{ sim.taiscRecogRatio }}%</span>
+              </div>
+              <input type="range" min="20" max="70" step="5" v-model.number="sim.taiscRecogRatio" class="w-full accent-amber-400 cursor-pointer" />
+              <div class="flex justify-between text-[11px] text-slate-400">
+                <span>20% (10月開工純工期攤)</span>
+                <span>45% (提早至7月開工+設備進場認列)</span>
+                <span>70% (Q2開工年底併聯)</span>
+              </div>
+            </div>
+
+            <!-- Lever 3 -->
+            <div class="p-4 rounded-xl bg-slate-900/80 border border-slate-800 space-y-2">
+              <div class="flex justify-between items-center">
+                <label class="font-bold text-sky-300">槓桿 3 ｜ EPC 主力案「日煙 5MW (1.75億)」勝率提拉 (原始 60%)</label>
+                <span class="font-num font-bold text-sm text-sky-400">{{ sim.jtiWinRate }}%</span>
+              </div>
+              <input type="range" min="60" max="100" step="5" v-model.number="sim.jtiWinRate" class="w-full accent-sky-400 cursor-pointer" />
+            </div>
+
+            <!-- Lever 4 -->
+            <div class="p-4 rounded-xl bg-slate-900/80 border border-slate-800 space-y-2">
+              <div class="flex justify-between items-center">
+                <label class="font-bold text-sky-300">槓桿 4 ｜ 大學與防災微電網群 (名目總額 5.6 億) 整體勝率提拉 (原始加權 15.1%)</label>
+                <span class="font-num font-bold text-sm text-sky-400">{{ sim.microgridWinRate }}%</span>
+              </div>
+              <input type="range" min="15" max="60" step="5" v-model.number="sim.microgridWinRate" class="w-full accent-sky-400 cursor-pointer" />
+            </div>
+
+            <!-- Lever 5 -->
+            <div class="p-4 rounded-xl bg-slate-900/80 border border-slate-800 space-y-2">
+              <div class="flex justify-between items-center">
+                <label class="font-bold text-emerald-300">槓桿 5 ｜ 新增「二手電廠收購技改 / 埔美國際提早開工」額外營收貢獻 (萬元)</label>
+                <span class="font-num font-bold text-sm text-emerald-400">+{{ formatNumber(sim.extraAmRevMan) }} 萬元</span>
+              </div>
+              <input type="range" min="0" max="15000" step="500" v-model.number="sim.extraAmRevMan" class="w-full accent-emerald-400 cursor-pointer" />
+            </div>
+
+            <!-- Lever 6 & Checkboxes -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+              <label class="p-3.5 rounded-xl bg-slate-900/90 border border-slate-700 flex items-center space-x-3 cursor-pointer">
+                <input type="checkbox" v-model="sim.includePudeng" class="w-4 h-4 accent-emerald-500 rounded" />
+                <div>
+                  <div class="font-bold text-white">補勾 12103003 普登大坪頂延續案</div>
+                  <div class="text-[11px] text-emerald-400">+1,367.4 萬元 (補填 JDE 起訖日即可認列)</div>
+                </div>
+              </label>
+              <div class="p-3.5 rounded-xl bg-slate-900/90 border border-slate-700">
+                <div class="flex justify-between items-center mb-1">
+                  <span class="font-bold text-purple-300">維運新商機目標毛利率 (原始 15%)</span>
+                  <span class="font-num font-bold text-purple-300">{{ sim.omOppMarginRate }}%</span>
+                </div>
+                <input type="range" min="15" max="30" step="1" v-model.number="sim.omOppMarginRate" class="w-full accent-purple-400 cursor-pointer" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right 5 Cols: Supabase Cloud Executive Decision Notes & File Upload -->
+        <div class="lg:col-span-5 mckinsey-card p-6 rounded-2xl flex flex-col justify-between space-y-5">
+          <div>
+            <div class="flex items-center justify-between border-b border-slate-800 pb-3 mb-4">
+              <div>
+                <span class="text-xs font-bold text-sky-400 uppercase">SUPABASE BAAS REALTIME LOG</span>
+                <h3 class="text-lg font-black text-white">☁️ 董總決策批示與策略推演雲端紀錄</h3>
+              </div>
+              <button @click="syncAllDataToSupabase" :disabled="syncingCloud" class="px-3 py-1.5 rounded-lg bg-sky-600 hover:bg-sky-500 disabled:opacity-50 text-xs font-bold text-white transition">
+                {{ syncingCloud ? '同步中...' : '⬆️ 同步全量預算至雲端' }}
+              </button>
+            </div>
+
+            <!-- Add Note Form -->
+            <div class="space-y-3 bg-slate-900/90 p-4 rounded-xl border border-slate-800">
+              <div class="grid grid-cols-2 gap-2.5">
+                <div>
+                  <label class="block text-[11px] text-slate-400 mb-1">發言/裁示主管</label>
+                  <input v-model="noteForm.author_name" type="text" placeholder="例：董事長 / 總經理 / 南區代表" class="w-full px-3 py-1.5 rounded-lg bg-slate-950 border border-slate-700 text-xs text-white" />
+                </div>
+                <div>
+                  <label class="block text-[11px] text-slate-400 mb-1">策略議題標籤</label>
+                  <select v-model="noteForm.strategy_tag" class="w-full px-3 py-1.5 rounded-lg bg-slate-950 border border-slate-700 text-xs text-white">
+                    <option value="資產管理缺口彌平">資產管理缺口彌平 (台糖雙案)</option>
+                    <option value="EPC勝率提拉">EPC 勝率提拉與微電網</option>
+                    <option value="維運毛利優化">維運佔位落地與毛利優化</option>
+                    <option value="AIDC第二曲線">FY2028 AIDC 算力中心佈局</option>
+                    <option value="預算考核口徑裁示">預算考核口徑與資源核決</option>
+                  </select>
+                </div>
+              </div>
+
+              <div>
+                <label class="block text-[11px] text-slate-400 mb-1">決策指示或策略備註內容</label>
+                <textarea v-model="noteForm.content" rows="3" placeholder="輸入董總會議裁示、行動方案或提問回覆（將自動附帶當前模擬器參數快照並寫入 Supabase）..." class="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-700 text-xs text-white"></textarea>
+              </div>
+
+              <!-- Optional File Upload to Supabase Storage -->
+              <div class="flex flex-wrap items-center justify-between gap-2 pt-1">
+                <label class="text-[11px] text-slate-400 flex items-center space-x-1.5 cursor-pointer hover:text-sky-300">
+                  <span>📎 附加檔案至 Supabase Storage (PDF/圖片)：</span>
+                  <input type="file" @change="handleFileSelect" class="text-[11px] text-slate-400 file:mr-2 file:py-1 file:px-2 file:rounded file:border-0 file:text-xs file:bg-slate-800 file:text-sky-300" />
+                </label>
+                <button @click="submitExecutiveNote" :disabled="submittingNote" class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 text-white text-xs font-bold shadow-lg">
+                  {{ submittingNote ? '儲存中...' : '💾 儲存決策紀錄 (含模擬快照)' }}
+                </button>
+              </div>
+              <p v-if="cloudFeedbackMsg" class="text-xs text-emerald-400 font-medium pt-1">{{ cloudFeedbackMsg }}</p>
+            </div>
+
+            <!-- Saved Notes List -->
+            <div class="mt-4 space-y-2.5 max-h-[340px] overflow-y-auto pr-1">
+              <div v-if="execNotes.length === 0" class="text-center py-6 text-xs text-slate-500">
+                尚無決策批示紀錄，可於上方輸入並同步至 Supabase 雲端資料庫。
+              </div>
+              <div v-for="n in execNotes" :key="n.id" class="p-3.5 rounded-xl bg-slate-900/75 border border-slate-800 text-xs space-y-1.5">
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center space-x-2">
+                    <span class="font-bold text-sky-300">{{ n.author_name }}</span>
+                    <span class="px-2 py-0.5 rounded bg-sky-500/15 text-sky-300 text-[10px]">{{ n.strategy_tag }}</span>
+                  </div>
+                  <div class="flex items-center space-x-2">
+                    <span class="text-[10px] text-slate-500 font-num">{{ formatTime(n.created_at) }}</span>
+                    <button @click="removeNote(n.id)" class="text-slate-500 hover:text-rose-400 text-[11px]">刪除</button>
+                  </div>
+                </div>
+                <p class="text-slate-200 whitespace-pre-line leading-relaxed">{{ n.content }}</p>
+                <div v-if="n.sim_snapshot" class="text-[10px] text-emerald-400 bg-emerald-950/30 px-2.5 py-1 rounded border border-emerald-800/40 font-num">
+                  📊 模擬快照：南區 {{ (n.sim_snapshot.totalSouthRev/1e8).toFixed(2) }} 億 ｜ 含維運總計 {{ (n.sim_snapshot.grandTotalWithOM/1e8).toFixed(2) }} 億 ｜ 台糖勝率 {{ n.sim_snapshot.taiscWinRate }}%
+                </div>
+                <div v-if="n.file_url" class="pt-1">
+                  <a :href="n.file_url" target="_blank" class="text-[11px] text-sky-400 hover:underline">🔗 檢視雲端附件檔案</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- =================================================================== -->
+    <!-- MODE 4: FULL EXCEL DATA APPENDIX (211 RECORDS ACROSS 4 TABLES)      -->
+    <!-- =================================================================== -->
+    <main v-if="activeMode === 'appendix'" class="flex-1 max-w-[1600px] w-full mx-auto px-4 lg:px-8 py-6 space-y-5">
+      <div class="flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <h2 class="text-xl font-black text-white">📑 FY2027 原始 Excel 數據全量數位附錄 (共 211 筆完整明細)</h2>
+          <p class="text-xs text-slate-400">100% 完整收錄《BU機會與階段年月_南區_2027.xlsx》、《機會簽約與營收推估_2027.xlsx》、《維運預算_2027.xlsx》所有案件，供董總隨時備查。</p>
+        </div>
+
+        <!-- Appendix Sub-Table Switcher & CSV Export -->
+        <div class="flex flex-wrap items-center gap-2">
+          <button @click="appendixTab = 'opps'" :class="appendixTab==='opps' ? 'bg-sky-600 text-white' : 'bg-slate-900 text-slate-400'" class="px-3 py-1.5 rounded-lg text-xs font-bold border border-slate-700">
+            附錄 A：南區業務機會與工程階段 (50筆)
+          </button>
+          <button @click="appendixTab = 'carryover'" :class="appendixTab==='carryover' ? 'bg-sky-600 text-white' : 'bg-slate-900 text-slate-400'" class="px-3 py-1.5 rounded-lg text-xs font-bold border border-slate-700">
+            附錄 B：延續專案未認列明細 (13筆)
+          </button>
+          <button @click="appendixTab = 'om_opps'" :class="appendixTab==='om_opps' ? 'bg-sky-600 text-white' : 'bg-slate-900 text-slate-400'" class="px-3 py-1.5 rounded-lg text-xs font-bold border border-slate-700">
+            附錄 C：維運新增商機與修繕 (20筆)
+          </button>
+          <button @click="appendixTab = 'om_contracts'" :class="appendixTab==='om_contracts' ? 'bg-sky-600 text-white' : 'bg-slate-900 text-slate-400'" class="px-3 py-1.5 rounded-lg text-xs font-bold border border-slate-700">
+            附錄 D：JDE 維運合約全表 (128筆)
+          </button>
+          <button @click="exportCurrentAppendixCSV" class="px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold">
+            ⬇️ 匯出 CSV
+          </button>
+        </div>
+      </div>
+
+      <!-- Filter Bar -->
+      <div class="glass-panel p-3.5 rounded-xl flex flex-wrap items-center justify-between gap-3">
+        <div class="flex flex-wrap items-center gap-3 flex-1">
+          <input v-model="searchQuery" type="text" placeholder="🔍 搜尋案件名稱、機會序號、JDE 代碼或類型..." class="px-3.5 py-1.5 rounded-lg bg-slate-950 border border-slate-700 text-xs text-white w-full sm:w-80" />
+          <select v-if="appendixTab === 'opps'" v-model="oppCategoryFilter" class="px-3 py-1.5 rounded-lg bg-slate-950 border border-slate-700 text-xs text-white">
+            <option value="ALL">全部業務類別 (50筆)</option>
+            <option value="統包工程">① 統包工程 EPC (41筆)</option>
+            <option value="資產管理">② 資產管理 建坤 (9筆)</option>
+          </select>
+          <select v-if="appendixTab === 'opps'" v-model="oppWinFilter" class="px-3 py-1.5 rounded-lg bg-slate-950 border border-slate-700 text-xs text-white">
+            <option value="ALL">全部勝率區間</option>
+            <option value="HIGH">高確定性 (勝率 ≥ 80%)</option>
+            <option value="MID">中確定性主力 (勝率 40%~79%)</option>
+            <option value="LOW">低確定性長尾 (勝率 &lt; 40%)</option>
+          </select>
+        </div>
+        <div class="text-xs text-slate-400 font-num">
+          當前篩選筆數：<strong class="text-sky-400">{{ filteredAppendixRows.length }}</strong> 筆
+        </div>
+      </div>
+
+      <!-- Appendix Table A: 50 Opportunities -->
+      <div v-if="appendixTab === 'opps'" class="mckinsey-card rounded-2xl overflow-hidden">
+        <div class="overflow-x-auto max-h-[600px]">
+          <table class="w-full text-left text-xs">
+            <thead class="bg-slate-900/95 sticky top-0 z-10 border-b border-slate-700 text-slate-300">
+              <tr>
+                <th class="py-3 px-3">#</th>
+                <th class="py-3 px-3">序號</th>
+                <th class="py-3 px-3">業務類別</th>
+                <th class="py-3 px-3">機會名稱</th>
+                <th class="py-3 px-3 text-center">類型</th>
+                <th class="py-3 px-3 text-right">容量(kWp)</th>
+                <th class="py-3 px-3 text-right">機會總額</th>
+                <th class="py-3 px-3 text-right">毛利率</th>
+                <th class="py-3 px-3 text-right">勝率</th>
+                <th class="py-3 px-3 text-right">加權簽約額</th>
+                <th class="py-3 px-3 text-right">2027認列營收</th>
+                <th class="py-3 px-3 text-right">2028遞延額</th>
+                <th class="py-3 px-3 text-center">簽約月</th>
+                <th class="py-3 px-3 text-center">施工許可</th>
+                <th class="py-3 px-3 text-center">設備進場</th>
+                <th class="py-3 px-3 text-center">併聯月</th>
+                <th class="py-3 px-3 text-center">竣工驗收</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-800/80 font-num">
+              <tr v-for="r in filteredAppendixRows" :key="r.code" class="hover:bg-slate-800/40">
+                <td class="py-2.5 px-3 text-slate-500">{{ r.id }}</td>
+                <td class="py-2.5 px-3 text-slate-300">{{ r.code }}</td>
+                <td class="py-2.5 px-3 font-sans">
+                  <span class="px-2 py-0.5 rounded text-[10px] font-bold" :class="r.category==='資產管理' ? 'bg-amber-500/20 text-amber-300' : 'bg-sky-500/20 text-sky-300'">{{ r.category }}</span>
+                </td>
+                <td class="py-2.5 px-3 font-sans font-semibold text-white">{{ r.name }}</td>
+                <td class="py-2.5 px-3 text-center font-sans text-slate-300">{{ r.opp_type }}</td>
+                <td class="py-2.5 px-3 text-right">{{ formatNumber(r.capacity_kwp) }}</td>
+                <td class="py-2.5 px-3 text-right text-slate-300">{{ formatNumber(r.total_amount) }}</td>
+                <td class="py-2.5 px-3 text-right">{{ (r.margin_rate * 100).toFixed(1) }}%</td>
+                <td class="py-2.5 px-3 text-right font-bold" :class="r.win_rate>=0.8 ? 'text-emerald-400' : (r.win_rate>=0.4 ? 'text-amber-300' : 'text-slate-400')">{{ Math.round(r.win_rate * 100) }}%</td>
+                <td class="py-2.5 px-3 text-right text-sky-300">{{ formatNumber(r.sign_amount) }}</td>
+                <td class="py-2.5 px-3 text-right font-bold text-emerald-400">{{ formatNumber(r.rev_2027) }}</td>
+                <td class="py-2.5 px-3 text-right text-rose-300">{{ formatNumber(r.defer_2028) }}</td>
+                <td class="py-2.5 px-3 text-center text-slate-400">{{ r.m_sign }}</td>
+                <td class="py-2.5 px-3 text-center text-slate-400">{{ r.m_permit }}</td>
+                <td class="py-2.5 px-3 text-center text-slate-400">{{ r.m_equip }}</td>
+                <td class="py-2.5 px-3 text-center text-slate-400">{{ r.m_grid }}</td>
+                <td class="py-2.5 px-3 text-center text-slate-400">{{ r.m_accept }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Appendix Table B: 13 Carryover Projects -->
+      <div v-if="appendixTab === 'carryover'" class="mckinsey-card rounded-2xl overflow-hidden">
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs">
+            <thead class="bg-slate-900/95 border-b border-slate-700 text-slate-300">
+              <tr>
+                <th class="py-3 px-3">#</th>
+                <th class="py-3 px-3">專案代碼</th>
+                <th class="py-3 px-3">專案名稱</th>
+                <th class="py-3 px-3 text-right">合約總金額</th>
+                <th class="py-3 px-3 text-right">至2026/09/30未認列</th>
+                <th class="py-3 px-3 text-right">2026 Q4 預計工進</th>
+                <th class="py-3 px-3 text-right">2027 認列推估</th>
+                <th class="py-3 px-3 text-center">預計起始~結束</th>
+                <th class="py-3 px-3">狀態與推估說明</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-800/80 font-num">
+              <tr v-for="c in filteredAppendixRows" :key="c.code" class="hover:bg-slate-800/40">
+                <td class="py-2.5 px-3 text-slate-500">{{ c.id }}</td>
+                <td class="py-2.5 px-3 text-sky-300">{{ c.code }}</td>
+                <td class="py-2.5 px-3 font-sans font-semibold text-white">{{ c.name }}</td>
+                <td class="py-2.5 px-3 text-right">{{ formatNumber(c.contract_amount) }}</td>
+                <td class="py-2.5 px-3 text-right text-amber-300">{{ formatNumber(c.unrecognized_202609) }}</td>
+                <td class="py-2.5 px-3 text-right text-slate-300">{{ formatNumber(c.est_2026_q4) }}</td>
+                <td class="py-2.5 px-3 text-right font-bold" :class="c.est_2027 > 0 ? 'text-emerald-400' : 'text-slate-500'">{{ formatNumber(c.est_2027) }}</td>
+                <td class="py-2.5 px-3 text-center text-slate-400">{{ c.start_date }} ~ {{ c.end_month }}</td>
+                <td class="py-2.5 px-3 font-sans text-slate-300">{{ c.note }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Appendix Table C: 20 O&M Opportunities -->
+      <div v-if="appendixTab === 'om_opps'" class="mckinsey-card rounded-2xl overflow-hidden">
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs">
+            <thead class="bg-slate-900/95 border-b border-slate-700 text-slate-300">
+              <tr>
+                <th class="py-3 px-3">#</th>
+                <th class="py-3 px-3">分類</th>
+                <th class="py-3 px-3">機會序號與勝率</th>
+                <th class="py-3 px-3">機會名稱</th>
+                <th class="py-3 px-3 text-right">毛利率</th>
+                <th class="py-3 px-3 text-right">Q1 營收</th>
+                <th class="py-3 px-3 text-right">Q2 營收</th>
+                <th class="py-3 px-3 text-right">Q3 營收</th>
+                <th class="py-3 px-3 text-right">Q4 營收</th>
+                <th class="py-3 px-3 text-right">2027 預計執行總額</th>
+                <th class="py-3 px-3 text-right">2027 預估毛利</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-800/80 font-num">
+              <tr v-for="o in filteredAppendixRows" :key="o.id" class="hover:bg-slate-800/40">
+                <td class="py-2.5 px-3 text-slate-500">{{ o.id }}</td>
+                <td class="py-2.5 px-3 font-sans">
+                  <span class="px-2 py-0.5 rounded text-[10px] font-bold" :class="o.sub_type==='預估佔位' ? 'bg-rose-500/20 text-rose-300' : (o.sub_type==='修繕專案' ? 'bg-amber-500/20 text-amber-300' : 'bg-sky-500/20 text-sky-300')">{{ o.sub_type }}</span>
+                </td>
+                <td class="py-2.5 px-3 font-sans text-slate-300">{{ o.code_win }}</td>
+                <td class="py-2.5 px-3 font-sans font-semibold text-white">{{ o.name }}</td>
+                <td class="py-2.5 px-3 text-right">{{ (o.margin_rate * 100).toFixed(1) }}%</td>
+                <td class="py-2.5 px-3 text-right text-slate-300">{{ formatNumber(o.q1) }}</td>
+                <td class="py-2.5 px-3 text-right text-slate-300">{{ formatNumber(o.q2) }}</td>
+                <td class="py-2.5 px-3 text-right text-slate-300">{{ formatNumber(o.q3) }}</td>
+                <td class="py-2.5 px-3 text-right text-slate-300">{{ formatNumber(o.q4) }}</td>
+                <td class="py-2.5 px-3 text-right font-bold text-amber-300">{{ formatNumber(o.rev_2027) }}</td>
+                <td class="py-2.5 px-3 text-right text-emerald-400">{{ formatNumber(o.margin_2027) }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Appendix Table D: 128 O&M JDE Contracts -->
+      <div v-if="appendixTab === 'om_contracts'" class="mckinsey-card rounded-2xl overflow-hidden">
+        <div class="overflow-x-auto max-h-[600px]">
+          <table class="w-full text-left text-xs">
+            <thead class="bg-slate-900/95 sticky top-0 z-10 border-b border-slate-700 text-slate-300">
+              <tr>
+                <th class="py-3 px-3">#</th>
+                <th class="py-3 px-3">JDE 專案代碼</th>
+                <th class="py-3 px-3">維運合約專案名稱</th>
+                <th class="py-3 px-3 text-right">毛利率</th>
+                <th class="py-3 px-3 text-right">Q1 營收</th>
+                <th class="py-3 px-3 text-right">Q2 營收</th>
+                <th class="py-3 px-3 text-right">Q3 營收</th>
+                <th class="py-3 px-3 text-right">Q4 營收</th>
+                <th class="py-3 px-3 text-right">2027 預計執行總額</th>
+                <th class="py-3 px-3 text-right">2027 預估毛利 (35%)</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-800/80 font-num">
+              <tr v-for="c in filteredAppendixRows" :key="c.id" class="hover:bg-slate-800/40" :class="c.rev_2027 === 0 ? 'bg-rose-950/20' : ''">
+                <td class="py-2 px-3 text-slate-500">{{ c.id }}</td>
+                <td class="py-2 px-3 text-sky-300">{{ c.code }}</td>
+                <td class="py-2 px-3 font-sans font-medium text-white">{{ c.name }}</td>
+                <td class="py-2 px-3 text-right text-emerald-400">{{ (c.margin_rate * 100).toFixed(0) }}%</td>
+                <td class="py-2 px-3 text-right text-slate-300">{{ formatNumber(c.q1) }}</td>
+                <td class="py-2 px-3 text-right text-slate-300">{{ formatNumber(c.q2) }}</td>
+                <td class="py-2 px-3 text-right text-slate-300">{{ formatNumber(c.q3) }}</td>
+                <td class="py-2 px-3 text-right text-slate-300">{{ formatNumber(c.q4) }}</td>
+                <td class="py-2 px-3 text-right font-bold" :class="c.rev_2027 > 0 ? 'text-white' : 'text-rose-400'">{{ formatNumber(c.rev_2027) }}</td>
+                <td class="py-2 px-3 text-right text-emerald-400">{{ formatNumber(c.margin_2027) }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+
+    <!-- =================================================================== -->
+    <!-- SPEAKER SCRIPT TELEPROMPTER DRAWER (三段式顧問講稿)                 -->
+    <!-- =================================================================== -->
+    <div v-if="showScriptDrawer" class="fixed bottom-4 right-4 z-50 w-full max-w-lg glass-panel rounded-2xl border-2 border-amber-400/60 shadow-2xl p-5 space-y-3">
+      <div class="flex items-center justify-between border-b border-slate-700 pb-2">
+        <div class="flex items-center space-x-2">
+          <span class="text-xs font-bold px-2 py-0.5 rounded bg-amber-500 text-slate-950">P.{{ currentSlide + 1 }} 講稿提詞</span>
+          <span class="text-xs font-bold text-amber-300">{{ slides[currentSlide].shortTitle }} ({{ slides[currentSlide].timeAllocation }})</span>
+        </div>
+        <button @click="showScriptDrawer = false" class="text-slate-400 hover:text-white text-xs">✕ 關閉</button>
+      </div>
+      <div class="space-y-2.5 text-xs leading-relaxed max-h-64 overflow-y-auto pr-1">
+        <div class="p-2.5 rounded-lg bg-slate-900/90 border-l-2 border-l-sky-400">
+          <span class="font-bold text-sky-300">【開場錨定】</span>
+          <span class="text-slate-200">{{ slides[currentSlide].script.opening }}</span>
+        </div>
+        <div class="p-2.5 rounded-lg bg-slate-900/90 border-l-2 border-l-emerald-400">
+          <span class="font-bold text-emerald-300">【數據洞察與對策】</span>
+          <span class="text-slate-200">{{ slides[currentSlide].script.body }}</span>
+        </div>
+        <div class="p-2.5 rounded-lg bg-slate-900/90 border-l-2 border-l-amber-400">
+          <span class="font-bold text-amber-300">【決策收斂/轉場】</span>
+          <span class="text-slate-200">{{ slides[currentSlide].script.closing }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- =================================================================== -->
+    <!-- SUPABASE CONFIG & AUTH MODAL                                        -->
+    <!-- =================================================================== -->
+    <div v-if="showSupabaseModal" class="fixed inset-0 z-50 bg-slate-950/75 backdrop-blur-sm flex items-center justify-center p-4">
+      <div class="mckinsey-card rounded-2xl max-w-xl w-full p-6 space-y-4 border border-sky-500/40">
+        <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+          <div class="flex items-center space-x-2">
+            <span class="w-3 h-3 rounded-full" :class="sbConnected ? 'bg-emerald-400' : 'bg-amber-400'"></span>
+            <h3 class="text-base font-black text-white">Supabase 雲端後端 (BaaS + Auth + RLS) 設定中心</h3>
+          </div>
+          <button @click="showSupabaseModal = false" class="text-slate-400 hover:text-white">✕</button>
+        </div>
+
+        <div class="p-3.5 rounded-xl text-xs border" :class="sbConnected ? 'bg-emerald-950/40 border-emerald-500/40 text-emerald-200' : 'bg-amber-950/40 border-amber-500/40 text-amber-200'">
+          <div class="font-bold">{{ sbStatusMsg }}</div>
+          <div class="text-[11px] text-slate-400 mt-1">遵循 github-supabase-web 安全守則：純前端僅使用公開 anon key，嚴禁置入 service_role 私鑰，後端強制啟用 RLS 行級安全。</div>
+        </div>
+
+        <!-- Connection Settings -->
+        <div class="space-y-3 text-xs">
+          <div>
+            <label class="block text-slate-400 mb-1">Supabase Project URL</label>
+            <input v-model="sbUrlInput" type="text" class="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-700 text-white font-num" />
+          </div>
+          <div>
+            <label class="block text-slate-400 mb-1">Supabase Anon Public Key</label>
+            <textarea v-model="sbKeyInput" rows="2" class="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-700 text-white font-num"></textarea>
+          </div>
+          <div class="flex flex-wrap gap-2">
+            <button @click="saveAndTestSupabase" class="px-4 py-2 rounded-lg bg-sky-600 hover:bg-sky-500 text-white font-bold">
+              🔌 測試並儲存連線
+            </button>
+            <button @click="syncAllDataToSupabase" class="px-4 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold">
+              ⬆️ 將 211 筆 Excel 數據同步至雲端資料表
+            </button>
+          </div>
+        </div>
+
+        <!-- Optional Auth Login Section -->
+        <div class="border-t border-slate-800 pt-4 space-y-3 text-xs">
+          <div class="flex items-center justify-between">
+            <span class="font-bold text-sky-300">🔐 Supabase Auth 身分驗證 (選填，供受保護上傳與簽核)</span>
+            <span v-if="sbUser" class="text-emerald-400 font-num">已登入：{{ sbUser.email }}</span>
+          </div>
+          <div v-if="!sbUser" class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+            <input v-model="authEmail" type="email" placeholder="主管信箱 Email" class="px-3 py-1.5 rounded-lg bg-slate-950 border border-slate-700 text-white" />
+            <input v-model="authPassword" type="password" placeholder="密碼 Password" class="px-3 py-1.5 rounded-lg bg-slate-950 border border-slate-700 text-white" />
+            <div class="flex space-x-1.5">
+              <button @click="handleSignIn" class="flex-1 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-white font-bold border border-slate-600">登入</button>
+              <button @click="handleSignUp" class="flex-1 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-sky-300 font-bold border border-slate-600">註冊</button>
+            </div>
+          </div>
+          <div v-else class="flex justify-end">
+            <button @click="handleSignOut" class="px-3 py-1 rounded bg-rose-950 text-rose-300 border border-rose-700">登出帳號</button>
+          </div>
+          <p v-if="authMsg" class="text-[11px] text-amber-300">{{ authMsg }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Load Full Dataset & Supabase Client -->
+  <script src="./static/fy2027-data.js"></script>
+  <script src="./static/supabase-client.js"></script>
+
+  <!-- Main Vue Application -->
+  <script>
+    const { createApp, ref, computed, onMounted, nextTick, watch } = Vue;
+
+    createApp({
+      setup() {
+        const fyData = ref(window.FY2027_DATA || { opps: [], carryovers: [], om_opps: [], om_contracts: [], monthly_2027: { months: [], carryover: [], epc_opp: [], am_opp: [], total_opp: [], total_rev: [] } });
+        const activeMode = ref('deck');
+        const currentSlide = ref(0);
+        const showScriptDrawer = ref(false);
+
+        // 15-Minute Timer
+        const timerSeconds = ref(900);
+        const timerRunning = ref(false);
+        let timerInterval = null;
+
+        const formattedTimer = computed(() => {
+          const m = Math.floor(timerSeconds.value / 60);
+          const s = timerSeconds.value % 60;
+          return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+        });
+
+        const toggleTimer = () => {
+          if (timerRunning.value) {
+            clearInterval(timerInterval);
+            timerRunning.value = false;
+          } else {
+            timerRunning.value = true;
+            timerInterval = setInterval(() => {
+              if (timerSeconds.value > 0) timerSeconds.value--;
+            }, 1000);
+          }
+        };
+
+        const resetTimer = () => {
+          clearInterval(timerInterval);
+          timerRunning.value = false;
+          timerSeconds.value = 900;
+        };
+
+        // Slides Definition (10 Slides for 15-Minute Executive Briefing)
+        const slides = ref([
+          {
+            shortTitle: '執行摘要',
+            kicker: 'SLIDE 01 ｜ EXECUTIVE SUMMARY & PORTFOLIO TRANSFORMATION',
+            actionTitle: '南區加權簽約總額達 10.94 億（超越 10 億目標），惟受台糖雙案 Q4 開工跨年影響，2027 當期認列為 6.55 億',
+            subTitle: '統包工程 (EPC) 認列 4.63 億超標 115.8%；資產管理 (建坤) 簽約 6.52 億達標但 4.59 億遞延至 2028；維運 (O&M) 獨立貢獻 1.01 億營收與 2,337 萬毛利',
+            timeAllocation: '2.0 分鐘',
+            dataSource: '資料來源：南區預算20261020.pptx / 機會簽約與營收推估_2027.xlsx',
+            script: {
+              opening: '董事長、總經理好，今天由我進行 FY2027 南區與維運商業計畫報告（預計 15 分鐘）。先報告核心結論：若看「乘勝率後之實質簽約金額」，南區已達 10.94 億元，超越公司 10 億目標！',
+              body: '為什麼第二版報表上的「2027 營收預估」是 6.55 億？因為第一版是以簽約額估算，而第二版我們嚴格按照「預計施工日到竣工月數」分攤。其中統包工程認列 4.63 億，超標 6,304 萬；而資產管理雖然加權簽約額達 6.52 億，但因台糖兩大停車場設定在 2027 年 10 月才開工，導致 4.59 億遞延到 2028 年。此外，維運部門將穩定貢獻 1.01 億營收與 2,337 萬毛利。',
+              closing: '接下來我將拆解這 3.45 億的時間差缺口，並提出如何透過「時程前移、勝率攻堅與節點認列」在 2027 當年度實質衝上 10 億。'
+            }
+          },
+          {
+            shortTitle: '營收轉化漏斗',
+            kicker: 'SLIDE 02 ｜ PIPELINE TO REVENUE CONVERSION DIAGNOSTIC',
+            actionTitle: '名目機會 36.66 億經勝率折算為 10.94 億簽約額，其中 5.08 億（46.4%）因開工晚而遞延至 2028 年',
+            subTitle: '2027 新案當期認列 5.86 億 ＋ 已簽約延續專案 6 案挹注 0.69 億 ＝ 6.55 億；另查獲 1 筆 1,367 萬延續案因缺起訖日漏計',
+            timeAllocation: '1.5 分鐘',
+            dataSource: '資料來源：機會簽約與營收推估_2027.xlsx (R04~R64)',
+            script: {
+              opening: '請看第 2 頁的商機漏斗轉化診斷。我們手上有 50 個具名機會、名目總額 36.66 億元，乘上各案勝率後，實質簽約額為 10.94 億元。',
+              body: '這 10.94 億當中，2027 年內可認列 5.86 億，加上 6 筆已簽約延續專案貢獻 6,902 萬，合計 6.55 億。請董總特別留意右下方：在 13 筆延續專案中，有一筆「12103003 台南學甲普登大坪頂案 (1,367.4萬元)」因為 JDE 系統漏填起訖日且 BU 未勾選，目前被算成 0 元！',
+              closing: '我們會後立即補齊該案 JDE 起訖日期，就能立刻為 2027 年無痛找回 1,367 萬元的確定營收。'
+            }
+          },
+          {
+            shortTitle: '勝率結構攻堅',
+            kicker: 'SLIDE 03 ｜ WIN-RATE TIER & HIGH-LEVERAGE TARGETS',
+            actionTitle: '高確定性基盤（延續＋勝率≥80%）已鎖定 2.40 億（36.6%）；決勝關鍵在於 44.0% 的「中確定性主力案」',
+            subTitle: '與其分散精力在 29 個低勝率小案，不如集中火力將「台糖雙案、日煙 5MW、中山微電網、中永峰」勝率推升至 80%',
+            timeAllocation: '1.5 分鐘',
+            dataSource: '資料來源：南區預算20261020.pptx Slide 4 / 機會簽約與營收推估_2027.xlsx',
+            script: {
+              opening: '第 3 頁我們從「勝率確定性」來檢視這 6.55 億的含金量。已簽約延續案與勝率 80% 以上的必拿案（如丸紅東南實業、津谷、和富、三星螺絲）合計 2.40 億元，占了 36.6% 的鐵票基盤。',
+              body: '真正決定明年能否衝破 9 億、10 億的，是中間占了 44%（2.88 億元）的「40%~79% 中確定性主力案」。我們盤點出右側這 5 個關鍵大案：台糖兩案、日煙 5MW 屋頂、中山大學微電網與中永峰漁電。',
+              closing: '只要總公司與南區聯手攻堅，把「日煙」與「中山大學微電網」兩案勝率拉到 80%~100%，光這兩案就能在 2027 當年度多創造近 1 億元營收！'
+            }
+          },
+          {
+            shortTitle: '資產管理破局',
+            kicker: 'SLIDE 04 ｜ ASSET MANAGEMENT (JIANKUN) 408M GAP RESOLUTION',
+            actionTitle: '資產管理 9 案加權簽約達 6.52 億，透過「台糖雙案工期前移 3 個月＋主設備進場認列」可追回 2.47 億營收',
+            subTitle: '同步推進「埔美國際 3.3MW 轉高勝率」與「3~5MW 老舊電廠收購技改包」，徹底彌平 4.08 億帳面認列缺口',
+            timeAllocation: '2.0 分鐘',
+            dataSource: '資料來源：BU機會與階段年月_南區_2027.xlsx (建坤 9 案)',
+            script: {
+              opening: '第 4 頁專門報告董總最關心的「資產管理（建坤）為何目標 6 億、預估認列僅 1.92 億」以及我們的破局方案。',
+              body: '請看左側表格：建坤 9 案中，津谷、和富、三星螺絲、城鋒 4 案勝率都是 100%（合計約 6,745 萬）。問題出在「台糖高雄大型車停車場 (19MW)」與「台糖明正停車場 (6MW)」，兩案加權簽約高達 5.5 億，但因為表定 2027/05 簽約、10 月才開工，導致 2027 年只認列了 20%（1.1 億）。對此我們擬定三大對策：第一，今年 Q4 提前啟動結構與饋線預審，將簽約提早至 3 月、開工提早至 7 月，並在 12 月「主設備進場」節點認列設備交付進度，一舉追回 2.47 億；第二，拉升埔美國際勝率；第三，落實簡報第 2 頁提到的「電廠收購與整改」，新增短週期收購案。',
+              closing: '透過這三招，資產管理在 2027 當年度的實質認列即可從 1.92 億推升至 5.5 億以上。'
+            }
+          },
+          {
+            shortTitle: '統包工程策略',
+            kicker: 'SLIDE 05 ｜ EPC TURNKEY TOP 10 & PRODUCT MIX UPGRADE',
+            actionTitle: '統包工程預估 4.63 億（達成率 115.8%），前 10 大案占 73%，由單一屋頂轉型為「光＋儲＋微電網」多元高週轉組合',
+            subTitle: '複製中山與石龜國小微電網經驗至校園群，並以「用電大戶光儲聯賣」激活東陽實業 (9.6MW) 與高雄榮總儲能巨案',
+            timeAllocation: '1.5 分鐘',
+            dataSource: '資料來源：南區預算20261020.pptx Slide 6 / BU機會與階段年月_南區_2027.xlsx',
+            script: {
+              opening: '第 5 頁報告統包工程（EPC）。EPC 目前預估 4.63 億，已超越 4 億目標。前 10 大案件合計 2.88 億，占 EPC 新案 73%，集中度高且風險可控。',
+              body: '今年 EPC 的一大亮點是產品組合升級：除了日煙、丸紅東南實業等優質外商屋頂案外，「大學與防災微電網」占了 20.5%。我們將以石龜國小微電網的交付實績，打包攻下中山、高科、嘉大、宜大微電網。此外，針對目前勝率僅估 5% 的兩大巨案——東陽實業 (3.36億) 與高雄榮總錶後儲能 (3.0億)，我們將導入錶後儲能投資報酬試算進行二輪攻堅。',
+              closing: 'EPC 不僅能穩守 4.63 億，更是我們在資產管理跨年過渡期間，替南區衝刺 5.5~5.8 億現金流的急先鋒。'
+            }
+          },
+          {
+            shortTitle: '月度工進與瓶頸',
+            kicker: 'SLIDE 06 ｜ 2027 MONTHLY REVENUE PACING & MILESTONE BOTTLENECKS',
+            actionTitle: '2027 營收呈「前低後高、Q4 單季衝上 2.60 億」，須提前化解「3月簽約、5月與8月主設備進場」三大工程洪峰',
+            subTitle: '50 案共 195 個工程節點高度集中於 5 月與 8 月進場（各 10 案），建議 Q1 啟動變壓器與模組框架集採鎖定交期',
+            timeAllocation: '1.5 分鐘',
+            dataSource: '資料來源：機會簽約與營收推估_2027.xlsx (R66~R72 階段分佈表)',
+            script: {
+              opening: '第 6 頁是 2027 年 1 到 12 月的營收認列節奏與工程節點熱區。上半年每月約在 1,500 萬至 5,500 萬之間爬升，到了 Q4（10~12月）隨著大型案場進入施工高峰與延續案密集認列，單月將突破 8,000 萬至 9,300 萬。',
+              body: '但請看下半部的「工程五階段熱區表」：我們從 Excel 數據中發現三個潛在交付瓶頸：第一，3 月份要同時完成 9 個案子簽約；第二，1~2 月與 5 月共有 26 個案子要拿到同意備案與施工許可；第三，5 月與 8 月各有 10 個案子要同時「主設備進場」！',
+              closing: '如果不在 Q1 提前鎖定變壓器、PCS 採購與吊裝工班，5 月跟 8 月一定會塞車。我們已規劃建立「雙週取照與集採追蹤表」提前拆彈。'
+            }
+          },
+          {
+            shortTitle: '維運預算總覽',
+            kicker: 'SLIDE 07 ｜ O&M BUDGET OVERVIEW & RECURRING GROSS MARGIN BASE',
+            actionTitle: '維運事業 2027 預算突破 1.01 億元（毛利 2,337 萬 / 毛利率 23.15%），128 筆長約貢獻 61.6% 高毛利鐵票',
+            subTitle: 'JDE 已簽維運合約 4,111 萬（毛利率 35.0%）穩健護盤；前十大合約占 50.8%，涵蓋 PROJECT AMEI、永堯、中租、群創等指標案',
+            timeAllocation: '1.5 分鐘',
+            dataSource: '資料來源：維運預算_2027.xlsx / 南區預算20261020.pptx Slide 10~12',
+            script: {
+              opening: '接著第 7、8 頁報告維運（O&M）預算。2027 年維運總預算突破 1 億元大關，來到 1 億 93.6 萬元，預估貢獻毛利 2,336.5 萬元，平均毛利率 23.15%。',
+              body: '維運的結構非常清晰：左邊是「JDE 已簽長約基盤」共 128 筆、營收 4,111 萬元，雖然占營收 40.7%，但因為毛利率高達 35%，單靠長約就貢獻了 1,439 萬毛利（占總毛利 61.6%）！右側前十大維運合約（如台南漁電 PROJECT AMEI 726萬、彰化永堯 355萬、高雄五甲尾 251萬、群創光電 275萬）合計占長約一半以上，現金流極度穩定。',
+              closing: '在穩固 4,111 萬長約的基礎上，下一頁報告我們如何達成另外 5,982 萬的新增維運與修繕商機。'
+            }
+          },
+          {
+            shortTitle: '維運商機拆解',
+            kicker: 'SLIDE 08 ｜ O&M OPPORTUNITY BREAKDOWN & MARGIN OPTIMIZATION',
+            actionTitle: '維運商機 5,982 萬中「預估佔位 3,750 萬（62.7%）」將透過既有 128 案技改配額落地，並優化毛利率至 22%+',
+            subTitle: '鎖定旭忠水上型修繕 (1,389萬) 與 BP/國泰/永鑫外來轉單案；同步清查 JDE 8 筆零元合約找回高毛利續約金流',
+            timeAllocation: '1.5 分鐘',
+            dataSource: '資料來源：維運預算_2027.xlsx (R16~R39) / Slide 13',
+            script: {
+              opening: '第 8 頁拆解維運新增商機 20 筆（5,982 萬元）。報告中誠實揭露：其中有 4 筆、合計 3,750 萬元屬於「預估佔位（無具名客戶）」，占了商機的 62.7%。董總一定會問：這 3,750 萬怎麼落地？',
+              body: '我們已幫維運團隊制定三大落地抓手：第一，將其中 2,750 萬的「服務升級與修繕佔位」直接拆解為既有 128 個老舊案場的「Inverter 延保換機、水面浮筒加固與無人機熱顯像健檢配額」；第二，1,000 萬外來案佔位直接對接國泰(20MW)、永鑫(27MW)、BP(39MW) 等孤兒案場轉單；第三，我們在 Excel 中發現 JDE 有 8 筆合約明年金額填 0（如台糖嘉義、特力屋等），清查續約後可再找回 300~500 萬 35% 高毛利營收！',
+              closing: '同時，目前新商機毛利率統一保守估 15%，透過提升外來代操定價，維運總毛利有望從 2,337 萬挑戰 2,750 萬元。'
+            }
+          },
+          {
+            shortTitle: 'FY28算力中心',
+            kicker: 'SLIDE 09 ｜ FY2028 SECOND GROWTH CURVE — AIDC POWER DELIVERY',
+            actionTitle: '中長期佈局 FY2028 資料中心（AIDC）整廠電力交付：鎖定麻豆 100MW、桃園 10MW、嘉惠 10MW，加權目標 10 億',
+            subTitle: '進能服定位為「算力中心電力交付端統包商」，承接 161kV 特高壓變電站、灰區不斷電備援 (BESS) 與綠電微電網',
+            timeAllocation: '1.0 分鐘',
+            dataSource: '資料來源：南區預算20261020.pptx Slide 2 & Slide 8',
+            script: {
+              opening: '第 9 頁報告進能服的「第二成長曲線」——FY2028 資料中心（AIDC）整廠電力交付。當光電市場趨於成熟，AI 算力中心最缺的就是「饋線電力」與「綠電備援」。',
+              body: '我們在 2027 年提前卡位三大算力指標案：第一是台南麻豆 100MW 算力中心（總額 30 億，20% 勝率加權 6 億）；第二是桃園 10MW 算力中心（總額 10 億，加權 2 億），建立北部跨區交付能力；第三是嘉義嘉惠 10MW 算力中心（總額 10 億，加權 2 億），結合我們既有嘉惠光電整改與維運客情，與麻豆形成南部雙核布局。',
+              closing: '三案合計名目池達 50 億、加權目標 10 億元，將在 2027 完成特高壓與灰區不斷電設計綁規，於 2028 全面爆發。'
+            }
+          },
+          {
+            shortTitle: '達標決策路線',
+            kicker: 'SLIDE 10 ｜ BRIDGE TO 1.0 BILLION & EXECUTIVE DECISIONS REQUIRED',
+            actionTitle: '總結：透過「台糖前移認列 (+2.47億) ＋ EPC 主力提拉 (+0.81億) ＋ 漏案補勾與維運併計」，全面達成 10 億目標',
+            subTitle: '提請董總裁示：(1) 跨年大案採簽約與主設備進場雙軌考核；(2) 核准台糖/日煙 Q4 前置設計預算；(3) 成立 AIDC 電力交付小組',
+            timeAllocation: '1.0 分鐘',
+            dataSource: '資料來源：進能服 FY2027 策略優化小組綜合推演',
+            script: {
+              opening: '最後一頁，我們為董總總結從 6.55 億邁向 10 億的「四大架橋路徑 (Bridge to 1B)」。',
+              body: '以 6.55 億為基準：第一，台糖雙案工期前移 3 個月並於 12 月主設備進場節點認列，加計勝率提至 60%，可增加 2.47 億；第二，日煙與中山微電網勝率攻堅增加 0.81 億；第三，補勾普登大坪頂案找回 0.14 億，南區本身即可達 9.97 億！若再加計維運事業的 1.01 億元，全事業總營收將高達 10.98 億元！',
+              closing: '以上報告，我們也準備了「互動式 10 億達標模擬器」與「211 筆 Excel 全量數據附錄」，請董總針對右側三項決策事項給予指導與裁示！'
+            }
+          }
+        ]);
+
+        const prevSlide = () => { if (currentSlide.value > 0) currentSlide.value--; };
+        const nextSlide = () => { if (currentSlide.value < slides.value.length - 1) currentSlide.value++; };
+
+        // Computed subsets for Deck tables
+        const amOpportunities = computed(() => {
+          return fyData.value.opps
+            .filter(o => o.category === '資產管理')
+            .sort((a, b) => b.rev_2027 - a.rev_2027);
+        });
+
+        const top10EpcOpportunities = computed(() => {
+          return fyData.value.opps
+            .filter(o => o.category === '統包工程')
+            .sort((a, b) => b.rev_2027 - a.rev_2027)
+            .slice(0, 10);
+        });
+
+        const top10OmContracts = computed(() => {
+          return [...fyData.value.om_contracts]
+            .sort((a, b) => b.rev_2027 - a.rev_2027)
+            .slice(0, 10);
+        });
+
+        // Strategy Simulator State
+        const sim = ref({
+          taiscWinRate: 40,
+          taiscRecogRatio: 20,
+          jtiWinRate: 60,
+          microgridWinRate: 15,
+          extraAmRevMan: 0,
+          includePudeng: false,
+          omOppMarginRate: 15
+        });
+
+        const applyPreset = (type) => {
+          if (type === 'baseline') {
+            sim.value = {
+              taiscWinRate: 40,
+              taiscRecogRatio: 20,
+              jtiWinRate: 60,
+              microgridWinRate: 15,
+              extraAmRevMan: 0,
+              includePudeng: false,
+              omOppMarginRate: 15
+            };
+          } else if (type === 'target10b') {
+            sim.value = {
+              taiscWinRate: 60,
+              taiscRecogRatio: 45,
+              jtiWinRate: 90,
+              microgridWinRate: 35,
+              extraAmRevMan: 3000,
+              includePudeng: true,
+              omOppMarginRate: 22
+            };
+          }
+        };
+
+        const simResult = computed(() => {
+          const baseSouthRev = 655200107;
+          // 1. Taisugar two projects nominal total = 1,375,000,000. Baseline rev27 = 110,504,587
+          const newTaiscRev = 1375000000 * (sim.value.taiscWinRate / 100) * (sim.value.taiscRecogRatio / 100);
+          const deltaTaisc = newTaiscRev - 110504587;
+
+          // 2. JTI rooftop nominal = 175,000,000, 2027 recog ratio = 0.863265. Baseline rev27 = 90,642,857
+          const newJtiRev = 175000000 * (sim.value.jtiWinRate / 100) * 0.8632653;
+          const deltaJti = newJtiRev - 90642857;
+
+          // 3. Microgrids nominal total = 560,000,000. Baseline rev27 = 80,750,000
+          const newMgRev = 560000000 * (sim.value.microgridWinRate / 100);
+          const deltaMg = newMgRev - 80750000;
+
+          // 4. Extra AM M&A / Pumei
+          const deltaExtraAm = sim.value.extraAmRevMan * 10000;
+
+          // 5. Pudeng carryover
+          const deltaPudeng = sim.value.includePudeng ? 13674420 : 0;
+
+          const totalSouthRev = Math.round(baseSouthRev + deltaTaisc + deltaJti + deltaMg + deltaExtraAm + deltaPudeng);
+          const gapTo1B = totalSouthRev - 1000000000;
+
+          const omRev = 100936186;
+          const omMargin = Math.round(14388952 + 59824937 * (sim.value.omOppMarginRate / 100));
+          const southMargin = Math.round(totalSouthRev * 0.14);
+
+          return {
+            totalSouthRev,
+            gapTo1B,
+            omRev,
+            omMargin,
+            grandTotalWithOM: totalSouthRev + omRev,
+            totalGrossMargin: southMargin + omMargin
+          };
+        });
+
+        // Appendix Filtering & CSV Export
+        const appendixTab = ref('opps');
+        const searchQuery = ref('');
+        const oppCategoryFilter = ref('ALL');
+        const oppWinFilter = ref('ALL');
+
+        const filteredAppendixRows = computed(() => {
+          const q = searchQuery.value.trim().toLowerCase();
+          if (appendixTab.value === 'opps') {
+            return fyData.value.opps.filter(r => {
+              if (oppCategoryFilter.value !== 'ALL' && r.category !== oppCategoryFilter.value) return false;
+              if (oppWinFilter.value === 'HIGH' && r.win_rate < 0.8) return false;
+              if (oppWinFilter.value === 'MID' && (r.win_rate < 0.4 || r.win_rate >= 0.8)) return false;
+              if (oppWinFilter.value === 'LOW' && r.win_rate >= 0.4) return false;
+              if (q && !(`${r.code} ${r.name} ${r.opp_type} ${r.category}`).toLowerCase().includes(q)) return false;
+              return true;
+            });
+          } else if (appendixTab.value === 'carryover') {
+            return fyData.value.carryovers.filter(r => !q || (`${r.code} ${r.name} ${r.note}`).toLowerCase().includes(q));
+          } else if (appendixTab.value === 'om_opps') {
+            return fyData.value.om_opps.filter(r => !q || (`${r.code_win} ${r.name} ${r.sub_type}`).toLowerCase().includes(q));
+          } else {
+            return fyData.value.om_contracts.filter(r => !q || (`${r.code} ${r.name}`).toLowerCase().includes(q));
+          }
+        });
+
+        const exportCurrentAppendixCSV = () => {
+          const rows = filteredAppendixRows.value;
+          if (!rows.length) return;
+          const keys = Object.keys(rows[0]).filter(k => k !== 'months');
+          const csvContent = '\uFEFF' + [
+            keys.join(','),
+            ...rows.map(r => keys.map(k => `"${String(r[k] ?? '').replace(/"/g, '""')}"`).join(','))
+          ].join('\n');
+          const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = `FY2027_${appendixTab.value}_export.csv`;
+          a.click();
+        };
+
+        // ECharts Instances
+        let chartInstances = [];
+        const initAllCharts = () => {
+          chartInstances.forEach(c => c.dispose());
+          chartInstances = [];
+
+          // 1. Target vs Forecast Chart
+          const el1 = document.getElementById('echart-target-gap');
+          if (el1) {
+            const c1 = echarts.init(el1, 'dark');
+            c1.setOption({
+              backgroundColor: 'transparent',
+              tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' } },
+              legend: { top: 0, textStyle: { color: '#CBD5E1' } },
+              grid: { left: '4%', right: '4%', bottom: '4%', top: '14%', containLabel: true },
+              xAxis: { type: 'category', data: ['① 統包工程 (EPC)', '② 資產管理 (建坤)', '南區合計 (對標10億)', '③ 維運事業 (O&M)'] },
+              yAxis: { type: 'value', name: '萬元', splitLine: { lineStyle: { color: '#1E293B' } } },
+              series: [
+                { name: '原訂目標', type: 'bar', data: [40000, 60000, 100000, 10094], itemStyle: { color: '#475569' } },
+                { name: '勝率加權簽約額', type: 'bar', data: [44220, 65172, 109392, 10094], itemStyle: { color: '#38BDF8' } },
+                { name: '2027 當期認列營收', type: 'bar', data: [46304, 19216, 65520, 10094], itemStyle: { color: '#10B981' } }
+              ]
+            });
+            chartInstances.push(c1);
+          }
+
+          // 2. Monthly Revenue Chart
+          const el2 = document.getElementById('echart-monthly-rev');
+          if (el2 && fyData.value.monthly_2027) {
+            const mData = fyData.value.monthly_2027;
+            let cum = 0;
+            const cumArr = mData.total_rev.map(v => { cum += v; return Math.round(cum / 10000); });
+            const c2 = echarts.init(el2, 'dark');
+            c2.setOption({
+              backgroundColor: 'transparent',
+              tooltip: { trigger: 'axis' },
+              legend: { top: 0, textStyle: { color: '#CBD5E1' } },
+              grid: { left: '4%', right: '4%', bottom: '4%', top: '14%', containLabel: true },
+              xAxis: { type: 'category', data: mData.months },
+              yAxis: [
+                { type: 'value', name: '單月(萬)', splitLine: { lineStyle: { color: '#1E293B' } } },
+                { type: 'value', name: '累計(萬)', splitLine: { show: false } }
+              ],
+              series: [
+                { name: '延續專案(6案)', type: 'bar', stack: 'rev', data: mData.carryover.map(v => Math.round(v/10000)), itemStyle: { color: '#3B82F6' } },
+                { name: '統包工程新案(41案)', type: 'bar', stack: 'rev', data: mData.epc_opp.map(v => Math.round(v/10000)), itemStyle: { color: '#10B981' } },
+                { name: '資產管理新案(9案)', type: 'bar', stack: 'rev', data: mData.am_opp.map(v => Math.round(v/10000)), itemStyle: { color: '#F59E0B' } },
+                { name: '累計認列營收', type: 'line', yAxisIndex: 1, data: cumArr, smooth: true, lineStyle: { width: 3, color: '#38BDF8' }, itemStyle: { color: '#38BDF8' } }
+              ]
+            });
+            chartInstances.push(c2);
+          }
+
+          // 3. Win-Rate Tier Chart
+          const el3 = document.getElementById('echart-winrate-tier');
+          if (el3) {
+            const c3 = echarts.init(el3, 'dark');
+            c3.setOption({
+              backgroundColor: 'transparent',
+              tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' } },
+              legend: { top: 0, textStyle: { color: '#CBD5E1' } },
+              grid: { left: '4%', right: '4%', bottom: '4%', top: '14%', containLabel: true },
+              xAxis: { type: 'category', data: ['延續專案(已簽)', '勝率 ≥ 80%', '勝率 50~79%', '勝率 40~49%', '勝率 < 40%'] },
+              yAxis: { type: 'value', name: '萬元', splitLine: { lineStyle: { color: '#1E293B' } } },
+              series: [
+                { name: '統包工程 (萬元)', type: 'bar', stack: 'tier', data: [6902, 10355, 12292, 5479, 11276], itemStyle: { color: '#10B981' } },
+                { name: '資產管理 (萬元)', type: 'bar', stack: 'tier', data: [0, 6745, 0, 11050, 1421], itemStyle: { color: '#F59E0B' } }
+              ]
+            });
+            chartInstances.push(c3);
+          }
+
+          // 4. O&M Monthly & Margin Rate Chart
+          const el4 = document.getElementById('echart-om-monthly');
+          if (el4) {
+            const jdeM = [351.6, 351.6, 351.6, 350.4, 350.4, 349.3, 348.1, 333.3, 331.4, 331.2, 331.1, 331.1];
+            const oppM = [99.4, 340.2, 590.2, 590.2, 590.2, 794.4, 794.4, 562.9, 437.9, 437.9, 437.9, 306.8];
+            const mRate = [30.6, 25.2, 22.5, 22.5, 22.5, 21.1, 21.1, 22.4, 23.6, 23.6, 23.6, 25.4];
+            const c4 = echarts.init(el4, 'dark');
+            c4.setOption({
+              backgroundColor: 'transparent',
+              tooltip: { trigger: 'axis' },
+              legend: { top: 0, textStyle: { color: '#CBD5E1' } },
+              grid: { left: '4%', right: '4%', bottom: '4%', top: '14%', containLabel: true },
+              xAxis: { type: 'category', data: ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'] },
+              yAxis: [
+                { type: 'value', name: '萬元', splitLine: { lineStyle: { color: '#1E293B' } } },
+                { type: 'value', name: '毛利率%', min: 15, max: 35, splitLine: { show: false } }
+              ],
+              series: [
+                { name: 'JDE長約基盤(35%毛利)', type: 'bar', stack: 'om', data: jdeM, itemStyle: { color: '#38BDF8' } },
+                { name: '新增維運與修繕機會(15%毛利)', type: 'bar', stack: 'om', data: oppM, itemStyle: { color: '#F97316' } },
+                { name: '單月綜合毛利率(%)', type: 'line', yAxisIndex: 1, data: mRate, smooth: true, lineStyle: { width: 3, color: '#A855F7' }, itemStyle: { color: '#A855F7' } }
+              ]
+            });
+            chartInstances.push(c4);
+          }
+
+          // 5. Top 15 Projects Deferral Comparison
+          const el5 = document.getElementById('echart-top15-defer');
+          if (el5) {
+            const top15 = [...fyData.value.opps].sort((a, b) => b.sign_amount - a.sign_amount).slice(0, 15);
+            const c5 = echarts.init(el5, 'dark');
+            c5.setOption({
+              backgroundColor: 'transparent',
+              tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' } },
+              legend: { top: 0, textStyle: { color: '#CBD5E1' } },
+              grid: { left: '3%', right: '3%', bottom: '12%', top: '12%', containLabel: true },
+              xAxis: {
+                type: 'category',
+                data: top15.map(x => x.name.length > 10 ? x.name.slice(0, 10) + '…' : x.name),
+                axisLabel: { rotate: 25, fontSize: 11 }
+              },
+              yAxis: { type: 'value', name: '萬元', splitLine: { lineStyle: { color: '#1E293B' } } },
+              series: [
+                { name: '2027 當期認列營收 (萬元)', type: 'bar', stack: 'tot', data: top15.map(x => Math.round(x.rev_2027/10000)), itemStyle: { color: '#10B981' } },
+                { name: '跨年遞延至 2028 認列 (萬元)', type: 'bar', stack: 'tot', data: top15.map(x => Math.round(x.defer_2028/10000)), itemStyle: { color: '#F43F5E' } }
+              ]
+            });
+            chartInstances.push(c5);
+          }
+        };
+
+        const resizeAllCharts = () => {
+          chartInstances.forEach(c => c.resize());
+        };
+
+        const switchMode = async (m) => {
+          activeMode.value = m;
+          if (m === 'charts') {
+            await nextTick();
+            initAllCharts();
+          }
+        };
+
+        // Supabase Integration State
+        const showSupabaseModal = ref(false);
+        const sbConnected = ref(false);
+        const sbStatusMsg = ref('正在檢測 Supabase 雲端連線...');
+        const sbUrlInput = ref(window.sbPortal.url);
+        const sbKeyInput = ref(window.sbPortal.key);
+        const sbUser = ref(null);
+        const authEmail = ref('');
+        const authPassword = ref('');
+        const authMsg = ref('');
+
+        const execNotes = ref([]);
+        const noteForm = ref({
+          author_name: '董總決策室',
+          strategy_tag: '資產管理缺口彌平',
+          content: ''
+        });
+        const selectedFile = ref(null);
+        const submittingNote = ref(false);
+        const syncingCloud = ref(false);
+        const cloudFeedbackMsg = ref('');
+
+        const checkSupabase = async () => {
+          const res = await window.sbPortal.testConnection();
+          sbConnected.value = res.connected;
+          sbStatusMsg.value = res.message;
+          sbUser.value = await window.sbPortal.getCurrentUser();
+          execNotes.value = await window.sbPortal.fetchNotes();
+        };
+
+        const saveAndTestSupabase = async () => {
+          window.sbPortal.saveConfig(sbUrlInput.value, sbKeyInput.value);
+          await checkSupabase();
+        };
+
+        const handleSignIn = async () => {
+          try {
+            authMsg.value = '登入中...';
+            sbUser.value = await window.sbPortal.signIn(authEmail.value, authPassword.value);
+            authMsg.value = '登入成功！';
+          } catch (e) {
+            authMsg.value = '登入失敗：' + e.message;
+          }
+        };
+
+        const handleSignUp = async () => {
+          try {
+            authMsg.value = '註冊中...';
+            sbUser.value = await window.sbPortal.signUp(authEmail.value, authPassword.value);
+            authMsg.value = '註冊成功！請檢查信箱或直接操作。';
+          } catch (e) {
+            authMsg.value = '註冊失敗：' + e.message;
+          }
+        };
+
+        const handleSignOut = async () => {
+          await window.sbPortal.signOut();
+          sbUser.value = null;
+          authMsg.value = '已登出';
+        };
+
+        const handleFileSelect = (e) => {
+          selectedFile.value = e.target.files[0] || null;
+        };
+
+        const submitExecutiveNote = async () => {
+          if (!noteForm.value.content.trim()) return;
+          submittingNote.value = true;
+          cloudFeedbackMsg.value = '';
+          try {
+            let fileUrl = null;
+            if (selectedFile.value) {
+              try {
+                fileUrl = await window.sbPortal.uploadAttachment(selectedFile.value);
+              } catch (err) {
+                console.warn('Upload fallback:', err);
+              }
+            }
+            const res = await window.sbPortal.addNote({
+              author_name: noteForm.value.author_name,
+              slide_ref: `Slide ${currentSlide.value + 1}`,
+              strategy_tag: noteForm.value.strategy_tag,
+              content: noteForm.value.content,
+              sim_snapshot: {
+                ...sim.value,
+                totalSouthRev: simResult.value.totalSouthRev,
+                grandTotalWithOM: simResult.value.grandTotalWithOM
+              },
+              file_url: fileUrl
+            });
+            execNotes.value = await window.sbPortal.fetchNotes();
+            noteForm.value.content = '';
+            selectedFile.value = null;
+            cloudFeedbackMsg.value = res.synced
+              ? '✅ 已成功寫入 Supabase 雲端資料庫並同步本機！'
+              : '✅ 已儲存至本機快取（執行 supabase-schema.sql 後即可同步雲端）！';
+          } finally {
+            submittingNote.value = false;
+          }
+        };
+
+        const removeNote = async (id) => {
+          await window.sbPortal.deleteNote(id);
+          execNotes.value = await window.sbPortal.fetchNotes();
+        };
+
+        const syncAllDataToSupabase = async () => {
+          syncingCloud.value = true;
+          cloudFeedbackMsg.value = '';
+          try {
+            const res = await window.sbPortal.syncFullDatasetToCloud(fyData.value);
+            cloudFeedbackMsg.value = res.message;
+            sbStatusMsg.value = res.message;
+          } finally {
+            syncingCloud.value = false;
+          }
+        };
+
+        const formatNumber = (val) => {
+          if (val === null || val === undefined || isNaN(val)) return '0';
+          return Number(val).toLocaleString('en-US');
+        };
+
+        const formatTime = (iso) => {
+          if (!iso) return '';
+          return new Date(iso).toLocaleString('zh-TW', { hour12: false });
+        };
+
+        onMounted(() => {
+          checkSupabase();
+          window.addEventListener('keydown', (e) => {
+            if (activeMode.value === 'deck' && !['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement?.tagName)) {
+              if (e.key === 'ArrowRight') nextSlide();
+              if (e.key === 'ArrowLeft') prevSlide();
+            }
+          });
+          window.addEventListener('resize', resizeAllCharts);
+        });
+
+        return {
+          fyData, activeMode, switchMode,
+          currentSlide, slides, prevSlide, nextSlide,
+          showScriptDrawer, timerSeconds, timerRunning, formattedTimer, toggleTimer, resetTimer,
+          amOpportunities, top10EpcOpportunities, top10OmContracts,
+          sim, simResult, applyPreset,
+          appendixTab, searchQuery, oppCategoryFilter, oppWinFilter, filteredAppendixRows, exportCurrentAppendixCSV,
+          resizeAllCharts,
+          showSupabaseModal, sbConnected, sbStatusMsg, sbUrlInput, sbKeyInput, sbUser,
+          authEmail, authPassword, authMsg, handleSignIn, handleSignUp, handleSignOut,
+          saveAndTestSupabase, syncAllDataToSupabase, syncingCloud,
+          execNotes, noteForm, handleFileSelect, submitExecutiveNote, submittingNote, removeNote, cloudFeedbackMsg,
+          formatNumber, formatTime
+        };
+      }
+    }).mount('#app');
+  </script>
+</body>
+</html>
